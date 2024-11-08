@@ -27,8 +27,8 @@ export class ArtistController {
 
   @Get()
   async getArtists() {
-    const users = await this.artistService.findAll();
-    return users;
+    const artists = await this.artistService.findAll();
+    return artists;
   }
 
   @Get('/:id')
