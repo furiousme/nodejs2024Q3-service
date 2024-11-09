@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { Album } from './album.entity';
-import { v4 as uuidv4 } from 'uuid';
+import * as crypto from 'node:crypto';
 
 @Injectable()
 export class AlbumRepository {
@@ -11,7 +11,7 @@ export class AlbumRepository {
     year: number,
     artistId: string | null,
   ): Promise<Album> {
-    const id = uuidv4();
+    const id = crypto.randomUUID();
     const now = new Date().getTime();
     const newAlbum = new Album({
       id,

@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   ClassSerializerInterceptor,
   Controller,
@@ -9,6 +8,7 @@ import {
   HttpStatus,
   NotFoundException,
   Param,
+  ParseUUIDPipe,
   Post,
   Put,
   UseInterceptors,
@@ -16,7 +16,6 @@ import {
 import { TrackService } from './track.service';
 import { Track } from './track.entity';
 import { CreateTrackDto } from './dtos/create-track.dto';
-import * as uuid from 'uuid';
 import { UpdateTrackDto } from './dtos/update-track.dto';
 
 @UseInterceptors(ClassSerializerInterceptor)
@@ -42,8 +41,7 @@ export class TrackController {
   }
 
   @Get('/:id')
-  async getTrackById(@Param('id') id: string) {
-    if (!uuid.validate(id)) throw new BadRequestException(`Invalid id ${id}`);
+  async getTrackById(@Param('id', new ParseUUIDPipe()) id: string) {
     const track = await this.trackService.findById(id);
     if (!track) throw new NotFoundException(`Track with id ${id} not found`);
     return track;
@@ -51,18 +49,18 @@ export class TrackController {
 
   @Put('/:id')
   async updateTrack(
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
     @Body() body: UpdateTrackDto,
   ): Promise<Track> {
-    if (!uuid.validate(id)) throw new BadRequestException(`Invalid id ${id}`);
     const track = await this.trackService.update(id, body);
     return track;
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete('/:id')
-  async deleteTrack(@Param('id') id: string): Promise<string> {
-    if (!uuid.validate(id)) throw new BadRequestException(`Invalid id ${id}`);
+  async deleteTrack(
+    @Param('id', new ParseUUIDPipe()) id: string,
+  ): Promise<string> {
     const deletedTrackId = await this.trackService.delete(id);
     return deletedTrackId;
   }

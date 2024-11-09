@@ -1,13 +1,13 @@
 import { Injectable } from '@nestjs/common';
 import { Artist } from './artist.entity';
-import { v4 as uuidv4 } from 'uuid';
+import * as crypto from 'node:crypto';
 
 @Injectable()
 export class ArtistRepository {
   private artists: Artist[] = [];
 
   async create(name: string, grammy: boolean) {
-    const id = uuidv4();
+    const id = crypto.randomUUID();
     const now = new Date().getTime();
     const newArtist = new Artist({
       id,

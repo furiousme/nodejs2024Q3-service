@@ -9,15 +9,14 @@ import {
   NotFoundException,
   UseInterceptors,
   ClassSerializerInterceptor,
-  BadRequestException,
   HttpCode,
   HttpStatus,
+  ParseUUIDPipe,
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UserService } from './user.service';
 import { User } from './user.entity';
 import { UpdatePasswordDto } from './dtos/update-password.dto';
-import * as uuid from 'uuid';
 
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('user')
@@ -37,8 +36,7 @@ export class UserController {
   }
 
   @Get('/:id')
-  async getUserById(@Param('id') id: string) {
-    if (!uuid.validate(id)) throw new BadRequestException(`Invalid id ${id}`);
+  async getUserById(@Param('id', new ParseUUIDPipe()) id: string) {
     const user = await this.userService.findById(id);
     if (!user) throw new NotFoundException(`User with id ${id} not found`);
     return user;
@@ -46,10 +44,9 @@ export class UserController {
 
   @Put('/:id')
   async updateUserPassword(
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
     @Body() body: UpdatePasswordDto,
   ): Promise<User> {
-    if (!uuid.validate(id)) throw new BadRequestException(`Invalid id ${id}`);
     const user = await this.userService.updateUserPassword(
       id,
       body.oldPassword,
@@ -60,8 +57,9 @@ export class UserController {
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete('/:id')
-  async deleteUser(@Param('id') id: string): Promise<string> {
-    if (!uuid.validate(id)) throw new BadRequestException(`Invalid id ${id}`);
+  async deleteUser(
+    @Param('id', new ParseUUIDPipe()) id: string,
+  ): Promise<string> {
     const deletedUserId = await this.userService.delete(id);
     return deletedUserId;
   }

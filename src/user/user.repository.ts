@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { v4 as uuidv4 } from 'uuid';
+import * as crypto from 'node:crypto';
 import { User } from './user.entity';
 
 @Injectable()
@@ -7,7 +7,7 @@ export class UserRepository {
   private users: User[] = [];
 
   async create(login: string, password: string) {
-    const id = uuidv4();
+    const id = crypto.randomUUID();
     const now = new Date().getTime();
     const newUser = new User({
       id,

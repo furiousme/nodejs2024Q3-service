@@ -1,5 +1,4 @@
 import {
-  BadRequestException,
   Body,
   ClassSerializerInterceptor,
   Controller,
@@ -9,6 +8,7 @@ import {
   HttpStatus,
   NotFoundException,
   Param,
+  ParseUUIDPipe,
   Post,
   Put,
   UseInterceptors,
@@ -16,7 +16,6 @@ import {
 import { ArtistService } from './artist.service';
 import { Artist } from './artist.entity';
 import { CreateArtistDto } from './dtos/artist.dto';
-import * as uuid from 'uuid';
 import { UpdateArtistDto } from './dtos/update-artist.dto';
 
 @UseInterceptors(ClassSerializerInterceptor)
@@ -37,8 +36,7 @@ export class ArtistController {
   }
 
   @Get('/:id')
-  async getArtistById(@Param('id') id: string) {
-    if (!uuid.validate(id)) throw new BadRequestException(`Invalid id ${id}`);
+  async getArtistById(@Param('id', new ParseUUIDPipe()) id: string) {
     const artist = await this.artistService.findById(id);
     if (!artist) throw new NotFoundException(`Artist with id ${id} not found`);
     return artist;
@@ -46,18 +44,18 @@ export class ArtistController {
 
   @Put('/:id')
   async updateArtist(
-    @Param('id') id: string,
+    @Param('id', new ParseUUIDPipe()) id: string,
     @Body() body: UpdateArtistDto,
   ): Promise<Artist> {
-    if (!uuid.validate(id)) throw new BadRequestException(`Invalid id ${id}`);
     const artist = await this.artistService.update(id, body);
     return artist;
   }
 
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete('/:id')
-  async deleteArtist(@Param('id') id: string): Promise<string> {
-    if (!uuid.validate(id)) throw new BadRequestException(`Invalid id ${id}`);
+  async deleteArtist(
+    @Param('id', new ParseUUIDPipe()) id: string,
+  ): Promise<string> {
     const deletedArtistId = await this.artistService.delete(id);
     return deletedArtistId;
   }

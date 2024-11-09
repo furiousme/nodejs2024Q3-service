@@ -1,5 +1,5 @@
 import { Injectable } from '@nestjs/common';
-import { v4 as uuidv4 } from 'uuid';
+import * as crypto from 'node:crypto';
 import { Track } from './track.entity';
 import { CreateTrackDto } from './dtos/create-track.dto';
 
@@ -8,7 +8,7 @@ export class TrackRepository {
   private tracks = [];
 
   async create({ name, artistId, albumId, duration }: CreateTrackDto) {
-    const id = uuidv4();
+    const id = crypto.randomUUID();
     const now = new Date().getTime();
     const newTrack = new Track({
       id,
