@@ -1,10 +1,16 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Album } from './album.entity';
 import { AlbumRepository } from './album.repository';
+import { TrackService } from 'src/track/track.service';
+import { FavoritesService } from 'src/favorites/favorites.service';
 
 @Injectable()
 export class AlbumService {
-  constructor(private readonly albumRepo: AlbumRepository) {}
+  constructor(
+    private readonly albumRepo: AlbumRepository,
+    private readonly tracksService: TrackService,
+    private readonly favoritesService: FavoritesService,
+  ) {}
 
   create(name: string, year: number, artistId?: string) {
     return this.albumRepo.create(name, year, artistId);
@@ -34,6 +40,12 @@ export class AlbumService {
   async delete(id: string) {
     const album = await this.albumRepo.findById(id);
     if (!album) throw new NotFoundException('Album not found');
+    await this.tracksService.removeAlbumReference(id);
+    await this.favoritesService.removeAlbum(id);
     return this.albumRepo.delete(id);
+  }
+
+  async removeArtistReference(artistId: string) {
+    return this.albumRepo.removeArtistReference(artistId);
   }
 }

@@ -48,4 +48,12 @@ export class AlbumRepository {
     this.albums.splice(albumIndex, 1);
     return id;
   }
+
+  async removeArtistReference(artistId: string) {
+    this.albums.forEach((album) => {
+      if (album.artistId === artistId) {
+        album.artistId = null;
+      }
+    });
+  }
 }

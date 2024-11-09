@@ -42,4 +42,20 @@ export class TrackRepository {
     this.tracks.splice(trackIndex, 1);
     return id;
   }
+
+  async removeArtistReference(artistId: string) {
+    this.tracks.forEach((track) => {
+      if (track.artistId === artistId) {
+        track.artistId = null;
+      }
+    });
+  }
+
+  async removeAlbumReference(albumId: string) {
+    this.tracks.forEach((track) => {
+      if (track.albumId === albumId) {
+        track.albumId = null;
+      }
+    });
+  }
 }
