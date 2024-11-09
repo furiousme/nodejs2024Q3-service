@@ -8,13 +8,14 @@ export class UserRepository {
 
   async create(login: string, password: string) {
     const id = uuidv4();
+    const now = new Date().getTime();
     const newUser = new User({
       id,
       login,
       password,
       version: 1,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
+      createdAt: now,
+      updatedAt: now,
     });
     this.users.push(newUser);
     return this.findById(id);

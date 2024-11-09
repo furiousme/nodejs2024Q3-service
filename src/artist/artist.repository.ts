@@ -8,13 +8,14 @@ export class ArtistRepository {
 
   async create(name: string, grammy: boolean) {
     const id = uuidv4();
+    const now = new Date().getTime();
     const newArtist = new Artist({
       id,
       name,
       grammy,
       version: 1,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
+      createdAt: now,
+      updatedAt: now,
     });
     this.artists.push(newArtist);
     return this.findById(id);

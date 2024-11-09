@@ -38,10 +38,11 @@ export class TrackService {
     const track = await this.findById(id);
     if (!track) throw new NotFoundException('Track not found');
 
+    const now = new Date().getTime();
     const updatedTrack = new Track({
       ...track,
       ...attrs,
-      updated_at: new Date().toISOString(),
+      updatedAt: now,
       version: track.version + 1,
     });
 
@@ -51,7 +52,7 @@ export class TrackService {
   async delete(id: string): Promise<string> {
     const track = await this.findById(id);
     if (!track) throw new NotFoundException('Track not found');
-    await this.favoritesService.removeTrack(id);
+    await this.favoritesService.removeTrackIfPresent(id);
     return this.trackRepo.delete(id);
   }
 

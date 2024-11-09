@@ -28,10 +28,11 @@ export class AlbumService {
     const album = await this.albumRepo.findById(id);
     if (!album) throw new NotFoundException('Album not found');
 
+    const now = new Date().getTime();
     const newAlbum = new Album({
       ...album,
       ...updatedAlbum,
-      updated_at: new Date().toISOString(),
+      updatedAt: now,
       version: album.version + 1,
     });
     return this.albumRepo.update(id, newAlbum);
@@ -41,7 +42,7 @@ export class AlbumService {
     const album = await this.albumRepo.findById(id);
     if (!album) throw new NotFoundException('Album not found');
     await this.tracksService.removeAlbumReference(id);
-    await this.favoritesService.removeAlbum(id);
+    await this.favoritesService.removeAlbumIfPresent(id);
     return this.albumRepo.delete(id);
   }
 

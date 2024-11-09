@@ -4,11 +4,11 @@ export class CreateTrackDto {
   @IsString()
   name: string;
 
-  @ValidateIf((object, value) => value !== null)
+  @ValidateIf((_, value) => value !== null)
   @IsString()
   artistId: string | null;
 
-  @ValidateIf((object, value) => value !== null)
+  @ValidateIf((_, value) => value !== null)
   @IsString()
   albumId: string | null;
 

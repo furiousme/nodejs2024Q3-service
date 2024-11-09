@@ -12,14 +12,15 @@ export class AlbumRepository {
     artistId: string | null,
   ): Promise<Album> {
     const id = uuidv4();
+    const now = new Date().getTime();
     const newAlbum = new Album({
       id,
       name,
       year,
       artistId,
       version: 1,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
+      createdAt: now,
+      updatedAt: now,
     });
 
     this.albums.push(newAlbum);

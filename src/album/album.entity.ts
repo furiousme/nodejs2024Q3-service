@@ -1,3 +1,5 @@
+import { Exclude } from 'class-transformer';
+
 export class Album {
   id: string;
 
@@ -7,11 +9,14 @@ export class Album {
 
   artistId: string | null;
 
+  @Exclude()
   version: number;
 
-  created_at: string;
+  @Exclude()
+  createdAt: number;
 
-  updated_at: string;
+  @Exclude()
+  updatedAt: number;
 
   constructor(partial: Partial<Album>) {
     return Object.assign(this, partial);

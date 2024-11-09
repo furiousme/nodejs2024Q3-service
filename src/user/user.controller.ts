@@ -10,6 +10,8 @@ import {
   UseInterceptors,
   ClassSerializerInterceptor,
   BadRequestException,
+  HttpCode,
+  HttpStatus,
 } from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UserService } from './user.service';
@@ -56,6 +58,7 @@ export class UserController {
     return user;
   }
 
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Delete('/:id')
   async deleteUser(@Param('id') id: string): Promise<string> {
     if (!uuid.validate(id)) throw new BadRequestException(`Invalid id ${id}`);

@@ -1,3 +1,5 @@
+import { Exclude } from 'class-transformer';
+
 export class Track {
   id: string;
 
@@ -9,11 +11,14 @@ export class Track {
 
   duration: number;
 
+  @Exclude()
   version: number;
 
-  created_at: string;
+  @Exclude()
+  createdAt: number;
 
-  updated_at: string;
+  @Exclude()
+  updatedAt: number;
 
   constructor(partial: Partial<Track>) {
     Object.assign(this, partial);

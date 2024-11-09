@@ -32,10 +32,11 @@ export class UserService {
     if (user.password !== oldPassword)
       throw new ForbiddenException('Old password is incorrect');
 
+    const now = new Date().getTime();
     const updatedUser = new User({
       ...user,
       password: newPassword,
-      updated_at: new Date().toISOString(),
+      updatedAt: now,
       version: user.version + 1,
     });
 

@@ -1,13 +1,17 @@
 import {
   BadRequestException,
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   NotFoundException,
   Param,
   Post,
   Put,
+  UseInterceptors,
 } from '@nestjs/common';
 import { AlbumService } from './album.service';
 import { Album } from './album.entity';
@@ -15,6 +19,7 @@ import { CreateAlbumDto } from './dtos/create-album.dto';
 import * as uuid from 'uuid';
 import { UpdateAlbumDto } from './dtos/update-album.dto';
 
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('album')
 export class AlbumController {
   constructor(private readonly albumService: AlbumService) {}
@@ -53,6 +58,7 @@ export class AlbumController {
     return album;
   }
 
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Delete('/:id')
   async deleteAlbum(@Param('id') id: string): Promise<string> {
     if (!uuid.validate(id)) throw new BadRequestException(`Invalid id ${id}`);

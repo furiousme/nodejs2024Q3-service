@@ -10,9 +10,9 @@ export class User {
 
   version: number;
 
-  created_at: string;
+  createdAt: number;
 
-  updated_at: string;
+  updatedAt: number;
 
   constructor(partial: Partial<User>) {
     Object.assign(this, partial);

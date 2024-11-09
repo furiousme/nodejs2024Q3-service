@@ -1,3 +1,5 @@
+import { Exclude } from 'class-transformer';
+
 export class Artist {
   id: string;
 
@@ -5,10 +7,13 @@ export class Artist {
 
   grammy: boolean;
 
-  updated_at: string;
+  @Exclude()
+  updatedAt: number;
 
-  created_at: string;
+  @Exclude()
+  createdAt: number;
 
+  @Exclude()
   version: number;
 
   constructor(partial: Partial<Artist>) {

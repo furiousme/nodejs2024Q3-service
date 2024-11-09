@@ -9,6 +9,7 @@ export class TrackRepository {
 
   async create({ name, artistId, albumId, duration }: CreateTrackDto) {
     const id = uuidv4();
+    const now = new Date().getTime();
     const newTrack = new Track({
       id,
       name,
@@ -16,8 +17,8 @@ export class TrackRepository {
       albumId: albumId,
       duration,
       version: 1,
-      created_at: new Date().toISOString(),
-      updated_at: new Date().toISOString(),
+      createdAt: now,
+      updatedAt: now,
     });
     this.tracks.push(newTrack);
     return this.findById(id);

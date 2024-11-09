@@ -30,10 +30,11 @@ export class ArtistService {
     const artist = await this.findById(id);
     if (!artist) throw new NotFoundException('Artist not found');
 
+    const now = new Date().getTime();
     const updatedArtist = new Artist({
       ...artist,
       ...attrs,
-      updated_at: new Date().toISOString(),
+      updatedAt: now,
       version: artist.version + 1,
     });
 
@@ -45,7 +46,7 @@ export class ArtistService {
     if (!artist) throw new NotFoundException('Artist not found');
     await this.albumService.removeArtistReference(id);
     await this.trackService.removeArtistReference(id);
-    await this.favoritesService.removeArtist(id);
+    await this.favoritesService.removeArtistIfPresent(id);
     return this.artistRepo.delete(id);
   }
 }

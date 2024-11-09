@@ -1,13 +1,17 @@
 import {
   BadRequestException,
   Body,
+  ClassSerializerInterceptor,
   Controller,
   Delete,
   Get,
+  HttpCode,
+  HttpStatus,
   NotFoundException,
   Param,
   Post,
   Put,
+  UseInterceptors,
 } from '@nestjs/common';
 import { TrackService } from './track.service';
 import { Track } from './track.entity';
@@ -15,6 +19,7 @@ import { CreateTrackDto } from './dtos/create-track.dto';
 import * as uuid from 'uuid';
 import { UpdateTrackDto } from './dtos/update-track.dto';
 
+@UseInterceptors(ClassSerializerInterceptor)
 @Controller('track')
 export class TrackController {
   constructor(private readonly trackService: TrackService) {}
@@ -54,6 +59,7 @@ export class TrackController {
     return track;
   }
 
+  @HttpCode(HttpStatus.NO_CONTENT)
   @Delete('/:id')
   async deleteTrack(@Param('id') id: string): Promise<string> {
     if (!uuid.validate(id)) throw new BadRequestException(`Invalid id ${id}`);
