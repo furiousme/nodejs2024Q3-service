@@ -17,11 +17,15 @@ export class FavoritesService {
     const artistsIds = await this.favoritesRepo.getArtists();
     const albumsIds = await this.favoritesRepo.getAlbums();
     const tracksIds = await this.favoritesRepo.getTracks();
-
+    const [artists, albums, tracks] = await Promise.all([
+      Promise.all([...artistsIds.map((id) => this.artistRepo.findById(id))]),
+      Promise.all([...albumsIds.map((id) => this.albumRepo.findById(id))]),
+      Promise.all([...tracksIds.map((id) => this.trackRepo.findById(id))]),
+    ]);
     return {
-      artists: artistsIds,
-      albums: albumsIds,
-      tracks: tracksIds,
+      artists,
+      albums,
+      tracks,
     };
   }
 
