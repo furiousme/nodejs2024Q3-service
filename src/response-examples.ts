@@ -50,3 +50,31 @@ export const albumNotFoundResponseExample = {
   message: 'Album with id 464b1dd2-3a1f-443b-99ac-331f827159c8 not found',
   error: 'Not Found',
 };
+
+export const trackResponseExample = {
+  name: 'Michael Jackson',
+  artistId: '464b1dd2-3a1f-443b-99ac-331f827159c8',
+  albumId: '464b1dd2-3a1f-443b-99ac-331f827159c8',
+  duration: 123,
+};
+
+export const favoritesResponseExample = {
+  artists: [artistResponseExample],
+  albums: [albumResponseExample],
+  tracks: [trackResponseExample],
+};
+
+export const entityAddedResponseExample =
+  '464b1dd2-3a1f-443b-99ac-331f827159c8';
+
+export const favoritesUnprocessableResponseExample = {
+  statusCode: 422,
+  message: 'Entity not found',
+  error: 'Unprocessable Entity',
+};
+
+export const favoritesNotFoundResponseExample = {
+  statusCode: 422,
+  message: 'Artist not found in favorites',
+  error: 'Unprocessable Entity',
+};
