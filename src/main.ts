@@ -2,10 +2,21 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const config = app.get(ConfigService);
+
+  const docConfig = new DocumentBuilder()
+    .setTitle('REST Service')
+    .setDescription('Home Library Service')
+    .setVersion('1.0')
+    .build();
+
+  const documentFactory = () => SwaggerModule.createDocument(app, docConfig);
+  SwaggerModule.setup('api', app, documentFactory);
+
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true,
