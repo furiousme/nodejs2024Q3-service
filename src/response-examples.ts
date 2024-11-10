@@ -58,6 +58,18 @@ export const trackResponseExample = {
   duration: 123,
 };
 
+export const trackBadRequestResponseExample = {
+  statusCode: 400,
+  message: ['name must be a string'],
+  error: 'Bad Request',
+};
+
+export const trackNotFoundResponseExample = {
+  statusCode: 404,
+  message: 'Track with id 464b1dd2-3a1f-443b-99ac-331f827159c8 not found',
+  error: 'Not Found',
+};
+
 export const favoritesResponseExample = {
   artists: [artistResponseExample],
   albums: [albumResponseExample],
