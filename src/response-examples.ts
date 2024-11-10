@@ -27,3 +27,17 @@ export const invalidIdResponseExample = {
   message: 'Validation failed (uuid  is expected)',
   error: 'Bad Request',
 };
+
+export const artistResponseExample = {
+  id: '8e2e5fb1-3fab-400e-a89c-010ec8e8aea3',
+  name: 'Michael Jackson',
+  grammy: true,
+};
+
+export const listOfArtistsResponseExample = [artistResponseExample];
+
+export const artistNotFoundExample = {
+  statusCode: 404,
+  message: 'Artist with id 464b1dd2-3a1f-443b-99ac-331f827159c8 not found',
+  error: 'Not Found',
+};
