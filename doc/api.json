@@ -1,0 +1,1464 @@
+{
+  "openapi": "3.0.0",
+  "paths": {
+    "/": {
+      "get": {
+        "operationId": "AppController_getHello",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": ""
+          }
+        },
+        "tags": [
+          "App"
+        ]
+      }
+    },
+    "/user": {
+      "post": {
+        "operationId": "UserController_createUser",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateUserDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The user has been created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                },
+                "example": {
+                  "id": "8e2e5fb1-3fab-400e-a89c-010ec8e8aea3",
+                  "login": "John Doe",
+                  "version": 1,
+                  "createdAt": 1731233542574,
+                  "updatedAt": 1731233542574
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "User"
+        ]
+      },
+      "get": {
+        "operationId": "UserController_getUsers",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "List all users",
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "id": "8e2e5fb1-3fab-400e-a89c-010ec8e8aea3",
+                    "login": "John Doe",
+                    "version": 1,
+                    "createdAt": 1731233542574,
+                    "updatedAt": 1731233542574
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/user/{id}": {
+      "get": {
+        "operationId": "UserController_getUserById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get user by id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                },
+                "example": {
+                  "id": "8e2e5fb1-3fab-400e-a89c-010ec8e8aea3",
+                  "login": "John Doe",
+                  "version": 1,
+                  "createdAt": 1731233542574,
+                  "updatedAt": 1731233542574
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Id is not valid uuid",
+            "content": {
+              "application/json": {
+                "example": {
+                  "statusCode": 400,
+                  "message": "Validation failed (uuid  is expected)",
+                  "error": "Bad Request"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "User not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "statusCode": 404,
+                  "message": "User with id 464b1dd2-3a1f-443b-99ac-331f827159c8 not found",
+                  "error": "Not Found"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "User"
+        ]
+      },
+      "put": {
+        "operationId": "UserController_updateUserPassword",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdatePasswordDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "User password updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/User"
+                },
+                "example": {
+                  "id": "d50234dc-0c9a-4705-be16-16c41ee02f3a",
+                  "login": "John Doe",
+                  "version": 2,
+                  "createdAt": 1731234367922,
+                  "updatedAt": 1731234384625
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Id is not valid uuid",
+            "content": {
+              "application/json": {
+                "example": {
+                  "statusCode": 400,
+                  "message": "Validation failed (uuid  is expected)",
+                  "error": "Bad Request"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "User"
+        ]
+      },
+      "delete": {
+        "operationId": "UserController_deleteUser",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "User deleted"
+          },
+          "400": {
+            "description": "Id is not valid uuid",
+            "content": {
+              "application/json": {
+                "example": {
+                  "statusCode": 400,
+                  "message": "Validation failed (uuid  is expected)",
+                  "error": "Bad Request"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "User"
+        ]
+      }
+    },
+    "/artist": {
+      "post": {
+        "operationId": "ArtistController_createArtist",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateArtistDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The artist has been created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Artist"
+                },
+                "example": {
+                  "id": "8e2e5fb1-3fab-400e-a89c-010ec8e8aea3",
+                  "name": "Michael Jackson",
+                  "grammy": true
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Artist"
+        ]
+      },
+      "get": {
+        "operationId": "ArtistController_getArtists",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "List all users",
+            "content": {
+              "application/json": {
+                "example": [
+                  {
+                    "id": "8e2e5fb1-3fab-400e-a89c-010ec8e8aea3",
+                    "name": "Michael Jackson",
+                    "grammy": true
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "tags": [
+          "Artist"
+        ]
+      }
+    },
+    "/artist/{id}": {
+      "get": {
+        "operationId": "ArtistController_getArtistById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get artist by id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Artist"
+                },
+                "example": {
+                  "id": "8e2e5fb1-3fab-400e-a89c-010ec8e8aea3",
+                  "name": "Michael Jackson",
+                  "grammy": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Id is not valid uuid",
+            "content": {
+              "application/json": {
+                "example": {
+                  "statusCode": 400,
+                  "message": "Validation failed (uuid  is expected)",
+                  "error": "Bad Request"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Artist not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "statusCode": 404,
+                  "message": "Artist with id 464b1dd2-3a1f-443b-99ac-331f827159c8 not found",
+                  "error": "Not Found"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Artist"
+        ]
+      },
+      "put": {
+        "operationId": "ArtistController_updateArtist",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateArtistDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Artist updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Artist"
+                },
+                "example": {
+                  "id": "8e2e5fb1-3fab-400e-a89c-010ec8e8aea3",
+                  "name": "Michael Jackson",
+                  "grammy": true
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Id is not valid uuid",
+            "content": {
+              "application/json": {
+                "example": {
+                  "statusCode": 400,
+                  "message": "Validation failed (uuid  is expected)",
+                  "error": "Bad Request"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Artist not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "statusCode": 404,
+                  "message": "Artist with id 464b1dd2-3a1f-443b-99ac-331f827159c8 not found",
+                  "error": "Not Found"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Artist"
+        ]
+      },
+      "delete": {
+        "operationId": "ArtistController_deleteArtist",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Artist deleted"
+          },
+          "400": {
+            "description": "Id is not valid uuid",
+            "content": {
+              "application/json": {
+                "example": {
+                  "statusCode": 400,
+                  "message": "Validation failed (uuid  is expected)",
+                  "error": "Bad Request"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Artist not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "statusCode": 404,
+                  "message": "Artist with id 464b1dd2-3a1f-443b-99ac-331f827159c8 not found",
+                  "error": "Not Found"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Artist"
+        ]
+      }
+    },
+    "/favs": {
+      "get": {
+        "operationId": "FavoritesController_getAll",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "Get all favorites",
+            "content": {
+              "application/json": {
+                "example": {
+                  "artists": [
+                    {
+                      "id": "8e2e5fb1-3fab-400e-a89c-010ec8e8aea3",
+                      "name": "Michael Jackson",
+                      "grammy": true
+                    }
+                  ],
+                  "albums": [
+                    {
+                      "id": "8e2e5fb1-3fab-400e-a89c-010ec8e8aea3",
+                      "name": "Michael Jackson",
+                      "year": 2023,
+                      "artistId": "8e2e5fb1-3fab-400e-a89c-010ec8e8aea3"
+                    }
+                  ],
+                  "tracks": [
+                    {
+                      "name": "Michael Jackson",
+                      "artistId": "464b1dd2-3a1f-443b-99ac-331f827159c8",
+                      "albumId": "464b1dd2-3a1f-443b-99ac-331f827159c8",
+                      "duration": 123
+                    }
+                  ]
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Favorites"
+        ]
+      }
+    },
+    "/favs/artist/{id}": {
+      "post": {
+        "operationId": "FavoritesController_addArtist",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Add artist to favorites",
+            "content": {
+              "application/json": {
+                "example": "464b1dd2-3a1f-443b-99ac-331f827159c8"
+              }
+            }
+          },
+          "400": {
+            "description": "Id is not valid uuid",
+            "content": {
+              "application/json": {
+                "example": {
+                  "statusCode": 400,
+                  "message": "Validation failed (uuid  is expected)",
+                  "error": "Bad Request"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Entity with this id not found"
+          }
+        },
+        "tags": [
+          "Favorites"
+        ]
+      },
+      "delete": {
+        "operationId": "FavoritesController_removeArtist",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Entity was deleted from favorites"
+          },
+          "400": {
+            "description": "Id is not valid uuid",
+            "content": {
+              "application/json": {
+                "example": {
+                  "statusCode": 400,
+                  "message": "Validation failed (uuid  is expected)",
+                  "error": "Bad Request"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity with this id not found in favorites",
+            "content": {
+              "application/json": {
+                "example": {
+                  "statusCode": 422,
+                  "message": "Artist not found in favorites",
+                  "error": "Unprocessable Entity"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Favorites"
+        ]
+      }
+    },
+    "/favs/album/{id}": {
+      "post": {
+        "operationId": "FavoritesController_addAlbum",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Add album to favorites",
+            "content": {
+              "application/json": {
+                "example": "464b1dd2-3a1f-443b-99ac-331f827159c8"
+              }
+            }
+          },
+          "400": {
+            "description": "Id is not valid uuid",
+            "content": {
+              "application/json": {
+                "example": {
+                  "statusCode": 400,
+                  "message": "Validation failed (uuid  is expected)",
+                  "error": "Bad Request"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Entity with this id not found"
+          }
+        },
+        "tags": [
+          "Favorites"
+        ]
+      },
+      "delete": {
+        "operationId": "FavoritesController_removeAlbum",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Entity was deleted from favorites"
+          },
+          "400": {
+            "description": "Id is not valid uuid",
+            "content": {
+              "application/json": {
+                "example": {
+                  "statusCode": 400,
+                  "message": "Validation failed (uuid  is expected)",
+                  "error": "Bad Request"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity with this id not found in favorites",
+            "content": {
+              "application/json": {
+                "example": {
+                  "statusCode": 422,
+                  "message": "Artist not found in favorites",
+                  "error": "Unprocessable Entity"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Favorites"
+        ]
+      }
+    },
+    "/favs/track/{id}": {
+      "post": {
+        "operationId": "FavoritesController_addTrack",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "201": {
+            "description": "Add track to favorites",
+            "content": {
+              "application/json": {
+                "example": "464b1dd2-3a1f-443b-99ac-331f827159c8"
+              }
+            }
+          },
+          "400": {
+            "description": "Id is not valid uuid",
+            "content": {
+              "application/json": {
+                "example": {
+                  "statusCode": 400,
+                  "message": "Validation failed (uuid  is expected)",
+                  "error": "Bad Request"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Entity with this id not found"
+          }
+        },
+        "tags": [
+          "Favorites"
+        ]
+      },
+      "delete": {
+        "operationId": "FavoritesController_removeTrack",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Entity was deleted from favorites"
+          },
+          "400": {
+            "description": "Id is not valid uuid",
+            "content": {
+              "application/json": {
+                "example": {
+                  "statusCode": 400,
+                  "message": "Validation failed (uuid  is expected)",
+                  "error": "Bad Request"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Entity with this id not found in favorites",
+            "content": {
+              "application/json": {
+                "example": {
+                  "statusCode": 422,
+                  "message": "Artist not found in favorites",
+                  "error": "Unprocessable Entity"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Favorites"
+        ]
+      }
+    },
+    "/album": {
+      "post": {
+        "operationId": "AlbumController_createAlbum",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateAlbumDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "The album has been created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Album"
+                },
+                "example": {
+                  "id": "8e2e5fb1-3fab-400e-a89c-010ec8e8aea3",
+                  "name": "Michael Jackson",
+                  "year": 2023,
+                  "artistId": "8e2e5fb1-3fab-400e-a89c-010ec8e8aea3"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Album"
+        ]
+      },
+      "get": {
+        "operationId": "AlbumController_getAlbums",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "The list of albums has been returned",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/Album"
+                  }
+                },
+                "example": [
+                  {
+                    "id": "8e2e5fb1-3fab-400e-a89c-010ec8e8aea3",
+                    "name": "Michael Jackson",
+                    "year": 2023,
+                    "artistId": "8e2e5fb1-3fab-400e-a89c-010ec8e8aea3"
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "tags": [
+          "Album"
+        ]
+      }
+    },
+    "/album/{id}": {
+      "get": {
+        "operationId": "AlbumController_getAlbumById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get album by id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Album"
+                },
+                "example": {
+                  "id": "8e2e5fb1-3fab-400e-a89c-010ec8e8aea3",
+                  "name": "Michael Jackson",
+                  "year": 2023,
+                  "artistId": "8e2e5fb1-3fab-400e-a89c-010ec8e8aea3"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Id is not valid uuid",
+            "content": {
+              "application/json": {
+                "example": {
+                  "statusCode": 400,
+                  "message": "Validation failed (uuid  is expected)",
+                  "error": "Bad Request"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Album not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "statusCode": 404,
+                  "message": "Album with id 464b1dd2-3a1f-443b-99ac-331f827159c8 not found",
+                  "error": "Not Found"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Album"
+        ]
+      },
+      "put": {
+        "operationId": "AlbumController_updateAlbum",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateAlbumDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "The album has been updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Album"
+                },
+                "example": {
+                  "id": "8e2e5fb1-3fab-400e-a89c-010ec8e8aea3",
+                  "name": "Michael Jackson",
+                  "year": 2023,
+                  "artistId": "8e2e5fb1-3fab-400e-a89c-010ec8e8aea3"
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Id is not valid uuid",
+            "content": {
+              "application/json": {
+                "example": {
+                  "statusCode": 400,
+                  "message": "Validation failed (uuid  is expected)",
+                  "error": "Bad Request"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Album not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "statusCode": 404,
+                  "message": "Album with id 464b1dd2-3a1f-443b-99ac-331f827159c8 not found",
+                  "error": "Not Found"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Album"
+        ]
+      },
+      "delete": {
+        "operationId": "AlbumController_deleteAlbum",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Album deleted"
+          },
+          "400": {
+            "description": "Id is not valid uuid",
+            "content": {
+              "application/json": {
+                "example": {
+                  "statusCode": 400,
+                  "message": "Validation failed (uuid  is expected)",
+                  "error": "Bad Request"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Album not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "statusCode": 404,
+                  "message": "Album with id 464b1dd2-3a1f-443b-99ac-331f827159c8 not found",
+                  "error": "Not Found"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Album"
+        ]
+      }
+    },
+    "/track": {
+      "post": {
+        "operationId": "TrackController_createTrack",
+        "parameters": [],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/CreateTrackDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Track created",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Track"
+                },
+                "example": {
+                  "name": "Michael Jackson",
+                  "artistId": "464b1dd2-3a1f-443b-99ac-331f827159c8",
+                  "albumId": "464b1dd2-3a1f-443b-99ac-331f827159c8",
+                  "duration": 123
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Body does not contain required fields",
+            "content": {
+              "application/json": {
+                "example": {
+                  "statusCode": 400,
+                  "message": [
+                    "name must be a string"
+                  ],
+                  "error": "Bad Request"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Track"
+        ]
+      },
+      "get": {
+        "operationId": "TrackController_getTracks",
+        "parameters": [],
+        "responses": {
+          "200": {
+            "description": "List of all tracks",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Track"
+                },
+                "example": [
+                  {
+                    "name": "Michael Jackson",
+                    "artistId": "464b1dd2-3a1f-443b-99ac-331f827159c8",
+                    "albumId": "464b1dd2-3a1f-443b-99ac-331f827159c8",
+                    "duration": 123
+                  }
+                ]
+              }
+            }
+          }
+        },
+        "tags": [
+          "Track"
+        ]
+      }
+    },
+    "/track/{id}": {
+      "get": {
+        "operationId": "TrackController_getTrackById",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Get track by id",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Track"
+                },
+                "example": {
+                  "name": "Michael Jackson",
+                  "artistId": "464b1dd2-3a1f-443b-99ac-331f827159c8",
+                  "albumId": "464b1dd2-3a1f-443b-99ac-331f827159c8",
+                  "duration": 123
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Id is not valid uuid",
+            "content": {
+              "application/json": {
+                "example": {
+                  "statusCode": 400,
+                  "message": "Validation failed (uuid  is expected)",
+                  "error": "Bad Request"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Track not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "statusCode": 404,
+                  "message": "Track with id 464b1dd2-3a1f-443b-99ac-331f827159c8 not found",
+                  "error": "Not Found"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Track"
+        ]
+      },
+      "put": {
+        "operationId": "TrackController_updateTrack",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/UpdateTrackDto"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Track updated",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/Track"
+                },
+                "example": {
+                  "name": "Michael Jackson",
+                  "artistId": "464b1dd2-3a1f-443b-99ac-331f827159c8",
+                  "albumId": "464b1dd2-3a1f-443b-99ac-331f827159c8",
+                  "duration": 123
+                }
+              }
+            }
+          },
+          "400": {
+            "description": "Id is not valid uuid",
+            "content": {
+              "application/json": {
+                "example": {
+                  "statusCode": 400,
+                  "message": "Validation failed (uuid  is expected)",
+                  "error": "Bad Request"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Track not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "statusCode": 400,
+                  "message": "Validation failed (uuid  is expected)",
+                  "error": "Bad Request"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Track"
+        ]
+      },
+      "delete": {
+        "operationId": "TrackController_deleteTrack",
+        "parameters": [
+          {
+            "name": "id",
+            "required": true,
+            "in": "path",
+            "schema": {
+              "type": "string"
+            }
+          }
+        ],
+        "responses": {
+          "204": {
+            "description": "Track deleted"
+          },
+          "400": {
+            "description": "Id is not valid uuid",
+            "content": {
+              "application/json": {
+                "example": {
+                  "statusCode": 400,
+                  "message": "Validation failed (uuid  is expected)",
+                  "error": "Bad Request"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Track not found",
+            "content": {
+              "application/json": {
+                "example": {
+                  "statusCode": 400,
+                  "message": "Validation failed (uuid  is expected)",
+                  "error": "Bad Request"
+                }
+              }
+            }
+          }
+        },
+        "tags": [
+          "Track"
+        ]
+      }
+    }
+  },
+  "info": {
+    "title": "REST Service",
+    "description": "Home Library Service",
+    "version": "1.0",
+    "contact": {}
+  },
+  "tags": [],
+  "servers": [],
+  "components": {
+    "schemas": {
+      "CreateUserDto": {
+        "type": "object",
+        "properties": {
+          "login": {
+            "type": "string",
+            "example": "John Doe",
+            "description": "User name"
+          },
+          "password": {
+            "type": "string",
+            "example": "password123",
+            "description": "User password"
+          }
+        },
+        "required": [
+          "login",
+          "password"
+        ]
+      },
+      "User": {
+        "type": "object",
+        "properties": {}
+      },
+      "UpdatePasswordDto": {
+        "type": "object",
+        "properties": {
+          "oldPassword": {
+            "type": "string",
+            "example": "password123",
+            "description": "User old password"
+          },
+          "newPassword": {
+            "type": "string",
+            "example": "newPassword123",
+            "description": "User new password"
+          }
+        },
+        "required": [
+          "oldPassword",
+          "newPassword"
+        ]
+      },
+      "CreateArtistDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Michael Jackson",
+            "description": "Artist name"
+          },
+          "grammy": {
+            "type": "boolean",
+            "example": true,
+            "description": "Grammy"
+          }
+        },
+        "required": [
+          "name",
+          "grammy"
+        ]
+      },
+      "Artist": {
+        "type": "object",
+        "properties": {}
+      },
+      "UpdateArtistDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "New name",
+            "example": "Vivaldi"
+          },
+          "grammy": {
+            "type": "boolean",
+            "description": "New grammy",
+            "example": false
+          }
+        }
+      },
+      "CreateAlbumDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "The name of the album",
+            "example": "The Dark Side of the Moon"
+          },
+          "year": {
+            "type": "number",
+            "description": "The year the album was released",
+            "example": 1973
+          },
+          "artistId": {
+            "type": "string",
+            "description": "The ID of the artist associated with the album",
+            "example": "8e2e5fb1-3fab-400e-a89c-010ec8e8aea3"
+          }
+        },
+        "required": [
+          "name",
+          "year"
+        ]
+      },
+      "Album": {
+        "type": "object",
+        "properties": {}
+      },
+      "UpdateAlbumDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "Dangerous",
+            "description": "A new name of the album"
+          },
+          "artistId": {
+            "type": "string",
+            "example": "464b1dd2-3a1f-443b-99ac-331f827159c8",
+            "description": "A new id of the artist"
+          },
+          "year": {
+            "type": "number",
+            "example": 1991,
+            "description": "A new year of the album"
+          }
+        }
+      },
+      "CreateTrackDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "example": "The Show Must Go On",
+            "description": "Track name"
+          },
+          "artistId": {
+            "type": "string",
+            "example": "b73bc2c2-3b4b-4b4b-8b4b-8b4b8b4b8b4b",
+            "description": "Artist id"
+          },
+          "albumId": {
+            "type": "string",
+            "example": "null",
+            "description": "Album id"
+          },
+          "duration": {
+            "type": "number",
+            "example": 180,
+            "description": "Track duration"
+          }
+        },
+        "required": [
+          "name",
+          "artistId",
+          "albumId",
+          "duration"
+        ]
+      },
+      "Track": {
+        "type": "object",
+        "properties": {}
+      },
+      "UpdateTrackDto": {
+        "type": "object",
+        "properties": {
+          "name": {
+            "type": "string",
+            "description": "New Track name",
+            "example": "Billie Jean"
+          },
+          "artistId": {
+            "type": "string",
+            "description": "New artist id",
+            "example": "d50234dc-0c9a-4705-be16-16c41ee02f3a"
+          },
+          "albumId": {
+            "type": "string",
+            "description": "New album id",
+            "example": null
+          },
+          "duration": {
+            "type": "number",
+            "description": "New track duration",
+            "example": 345
+          }
+        },
+        "required": [
+          "duration"
+        ]
+      }
+    }
+  }
+}
