@@ -28,7 +28,6 @@ import {
 } from '@nestjs/swagger';
 import {
   invalidIdResponseExample,
-  listOfUsersResponseExample,
   userNotFoundExample,
   userResponseExample,
   userUpdatedResponseExample,
@@ -62,7 +61,7 @@ export class UserController {
    */
   @ApiOkResponse({
     description: 'List all users',
-    example: listOfUsersResponseExample,
+    example: [userResponseExample],
   })
   @Get()
   async getUsers() {

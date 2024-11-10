@@ -26,10 +26,9 @@ import {
   ApiOkResponse,
 } from '@nestjs/swagger';
 import {
-  artistNotFoundExample,
+  artistNotFoundResponseExample,
   artistResponseExample,
   invalidIdResponseExample,
-  listOfArtistsResponseExample,
 } from 'src/response-examples';
 
 @UseInterceptors(ClassSerializerInterceptor)
@@ -59,7 +58,7 @@ export class ArtistController {
    */
   @ApiOkResponse({
     description: 'List all users',
-    example: listOfArtistsResponseExample,
+    example: [artistResponseExample],
   })
   @Get()
   async getArtists() {
@@ -77,8 +76,8 @@ export class ArtistController {
     example: artistResponseExample,
   })
   @ApiNotFoundResponse({
-    description: 'User not found',
-    example: artistNotFoundExample,
+    description: 'Artist not found',
+    example: artistNotFoundResponseExample,
   })
   @ApiBadRequestResponse({
     description: 'Id is not valid uuid',
@@ -102,7 +101,7 @@ export class ArtistController {
   })
   @ApiNotFoundResponse({
     description: 'Artist not found',
-    example: artistNotFoundExample,
+    example: artistNotFoundResponseExample,
   })
   @ApiBadRequestResponse({
     description: 'Id is not valid uuid',
@@ -129,7 +128,7 @@ export class ArtistController {
   })
   @ApiNotFoundResponse({
     description: 'Artist not found',
-    example: artistNotFoundExample,
+    example: artistNotFoundResponseExample,
   })
   @HttpCode(HttpStatus.NO_CONTENT)
   @Delete('/:id')

@@ -6,8 +6,6 @@ export const userResponseExample = {
   updatedAt: 1731233542574,
 };
 
-export const listOfUsersResponseExample = [userResponseExample];
-
 export const userNotFoundExample = {
   statusCode: 404,
   message: 'User with id 464b1dd2-3a1f-443b-99ac-331f827159c8 not found',
@@ -34,10 +32,21 @@ export const artistResponseExample = {
   grammy: true,
 };
 
-export const listOfArtistsResponseExample = [artistResponseExample];
-
-export const artistNotFoundExample = {
+export const artistNotFoundResponseExample = {
   statusCode: 404,
   message: 'Artist with id 464b1dd2-3a1f-443b-99ac-331f827159c8 not found',
+  error: 'Not Found',
+};
+
+export const albumResponseExample = {
+  id: '8e2e5fb1-3fab-400e-a89c-010ec8e8aea3',
+  name: 'Michael Jackson',
+  year: 2023,
+  artistId: '8e2e5fb1-3fab-400e-a89c-010ec8e8aea3',
+};
+
+export const albumNotFoundResponseExample = {
+  statusCode: 404,
+  message: 'Album with id 464b1dd2-3a1f-443b-99ac-331f827159c8 not found',
   error: 'Not Found',
 };
