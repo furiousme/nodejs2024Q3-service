@@ -1,0 +1,12 @@
+services:
+  nest-app:
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    environment:
+      NODE_ENV: development
+      PORT: 4002
+    ports:
+      - "4002:4002"
+    volumes:
+      - ./src:/usr/src/app/src
