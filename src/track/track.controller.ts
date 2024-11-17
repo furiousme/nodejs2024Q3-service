@@ -146,7 +146,7 @@ export class TrackController {
   async deleteTrack(
     @Param('id', new ParseUUIDPipe()) id: string,
   ): Promise<string> {
-    const deletedTrackId = await this.trackService.delete(id);
-    return deletedTrackId;
+    await this.trackService.delete(id);
+    return id;
   }
 }

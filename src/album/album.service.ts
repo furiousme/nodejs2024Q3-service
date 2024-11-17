@@ -1,6 +1,5 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Album } from './album.entity';
-import { AlbumRepository } from './album.repository';
 import { TrackService } from 'src/track/track.service';
 import { FavoritesService } from 'src/favorites/favorites.service';
 import { InjectRepository } from '@nestjs/typeorm';

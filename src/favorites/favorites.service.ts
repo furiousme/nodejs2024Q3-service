@@ -4,12 +4,11 @@ import {
   UnprocessableEntityException,
 } from '@nestjs/common';
 import { FavoritesRepository } from './favorites.repository';
-import { AlbumRepository } from 'src/album/album.repository';
-import { TrackRepository } from 'src/track/track.repository';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Artist } from 'src/artist/artist.entity';
 import { Repository } from 'typeorm';
 import { Album } from 'src/album/album.entity';
+import { Track } from 'src/track/track.entity';
 
 @Injectable()
 export class FavoritesService {
@@ -21,7 +20,9 @@ export class FavoritesService {
 
     @InjectRepository(Album)
     private readonly albumRepo: Repository<Album>,
-    private readonly trackRepo: TrackRepository,
+
+    @InjectRepository(Track)
+    private readonly trackRepo: Repository<Track>,
   ) {}
 
   async getAll() {
@@ -33,7 +34,7 @@ export class FavoritesService {
         ...artistsIds.map((id) => this.artistRepo.findOneBy({ id })),
       ]),
       Promise.all([...albumsIds.map((id) => this.albumRepo.findOneBy({ id }))]),
-      Promise.all([...tracksIds.map((id) => this.trackRepo.findById(id))]),
+      Promise.all([...tracksIds.map((id) => this.trackRepo.findOneBy({ id }))]),
     ]);
 
     return {
@@ -56,7 +57,7 @@ export class FavoritesService {
   }
 
   async addTrack(trackId: string) {
-    const track = await this.trackRepo.findById(trackId);
+    const track = await this.trackRepo.findOneBy({ id: trackId });
     if (!track) throw new UnprocessableEntityException('Entity not found');
     return this.favoritesRepo.addTrack(trackId);
   }
