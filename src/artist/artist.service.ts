@@ -1,52 +1,48 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Artist } from './artist.entity';
-import { ArtistRepository } from './artist.repository';
 import { FavoritesService } from 'src/favorites/favorites.service';
 import { AlbumService } from 'src/album/album.service';
 import { TrackService } from 'src/track/track.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class ArtistService {
   constructor(
-    private readonly artistRepo: ArtistRepository,
+    @InjectRepository(Artist)
+    private readonly artistRepo: Repository<Artist>,
     private readonly albumService: AlbumService,
     private readonly trackService: TrackService,
     private readonly favoritesService: FavoritesService,
   ) {}
 
   create(name: string, grammy: boolean): Promise<Artist> {
-    return this.artistRepo.create(name, grammy);
+    const artist = this.artistRepo.create({ name, grammy });
+    return this.artistRepo.save(artist);
   }
 
   findAll(): Promise<Artist[]> {
-    return this.artistRepo.findAll();
+    return this.artistRepo.find();
   }
 
   findById(id: string): Promise<Artist> {
-    return this.artistRepo.findById(id);
+    return this.artistRepo.findOneBy({ id });
   }
 
   async update(id: string, attrs: Partial<Artist>): Promise<Artist> {
     const artist = await this.findById(id);
     if (!artist) throw new NotFoundException('Artist not found');
 
-    const now = new Date().getTime();
-    const updatedArtist = new Artist({
-      ...artist,
-      ...attrs,
-      updatedAt: now,
-      version: artist.version + 1,
-    });
-
-    return this.artistRepo.update(id, updatedArtist);
+    Object.assign(artist, { ...attrs });
+    return this.artistRepo.save(artist);
   }
 
-  async delete(id: string): Promise<string> {
+  async delete(id: string): Promise<void> {
     const artist = await this.findById(id);
     if (!artist) throw new NotFoundException('Artist not found');
     await this.albumService.removeArtistReference(id);
     await this.trackService.removeArtistReference(id);
     await this.favoritesService.removeArtistIfPresent(id);
-    return this.artistRepo.delete(id);
+    this.artistRepo.remove(artist);
   }
 }

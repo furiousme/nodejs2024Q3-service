@@ -1,9 +1,16 @@
-import { Exclude } from 'class-transformer';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Exclude, Transform } from 'class-transformer';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+  VersionColumn,
+} from 'typeorm';
 
 @Entity()
 export class Artist {
-  @PrimaryGeneratedColumn()
+  @PrimaryGeneratedColumn('uuid')
   id: string;
 
   @Column()
@@ -12,15 +19,23 @@ export class Artist {
   @Column()
   grammy: boolean;
 
-  @Column()
-  @Exclude()
-  updatedAt: number;
-
-  @Column()
+  @CreateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+  })
+  @Transform(({ value }) => new Date(value).getTime())
   @Exclude()
   createdAt: number;
 
-  @Column()
+  @UpdateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+  })
+  @Transform(({ value }) => new Date(value).getTime())
+  @Exclude()
+  updatedAt: number;
+
+  @VersionColumn()
   @Exclude()
   version: number;
 
