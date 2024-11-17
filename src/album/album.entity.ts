@@ -1,5 +1,12 @@
-import { Exclude } from 'class-transformer';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Exclude, Transform } from 'class-transformer';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+  VersionColumn,
+} from 'typeorm';
 
 @Entity()
 export class Album {
@@ -12,19 +19,27 @@ export class Album {
   @Column()
   year: number;
 
-  @Column()
+  @Column({ nullable: true })
   artistId: string | null;
 
+  @VersionColumn()
   @Exclude()
-  @Column()
   version: number;
 
+  @CreateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+  })
+  @Transform(({ value }) => new Date(value).getTime())
   @Exclude()
-  @Column()
   createdAt: number;
 
+  @UpdateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+  })
+  @Transform(({ value }) => new Date(value).getTime())
   @Exclude()
-  @Column()
   updatedAt: number;
 
   constructor(partial: Partial<Album>) {
