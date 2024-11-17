@@ -65,8 +65,8 @@ export class FavoritesController {
   async addArtist(
     @Param('id', new ParseUUIDPipe()) id: string,
   ): Promise<string> {
-    const addedArtistId = await this.favoritesService.addArtist(id);
-    return addedArtistId;
+    const favoriteRecordId = await this.favoritesService.addArtist(id);
+    return favoriteRecordId;
   }
 
   /**
@@ -87,8 +87,8 @@ export class FavoritesController {
   @HttpCode(HttpStatus.CREATED)
   @Post('album/:id')
   async addAlbum(@Param('id', new ParseUUIDPipe()) id: string) {
-    const addedAlbumId = await this.favoritesService.addAlbum(id);
-    return addedAlbumId;
+    const favoriteRecordId = await this.favoritesService.addAlbum(id);
+    return favoriteRecordId;
   }
 
   /**
@@ -109,8 +109,8 @@ export class FavoritesController {
   @HttpCode(HttpStatus.CREATED)
   @Post('track/:id')
   async addTrack(@Param('id', new ParseUUIDPipe()) id: string) {
-    const addedTrackId = await this.favoritesService.addTrack(id);
-    return addedTrackId;
+    const favoriteRecordId = await this.favoritesService.addTrack(id);
+    return favoriteRecordId;
   }
 
   /**

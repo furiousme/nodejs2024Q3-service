@@ -39,10 +39,11 @@ export class ArtistService {
 
   async delete(id: string): Promise<void> {
     const artist = await this.findById(id);
+    const silent = true;
     if (!artist) throw new NotFoundException('Artist not found');
     await this.albumService.removeArtistReference(id);
     await this.trackService.removeArtistReference(id);
-    await this.favoritesService.removeArtistIfPresent(id);
+    await this.favoritesService.removeArtist(id, silent);
     this.artistRepo.remove(artist);
   }
 }

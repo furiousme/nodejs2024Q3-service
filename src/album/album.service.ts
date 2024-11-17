@@ -37,9 +37,10 @@ export class AlbumService {
 
   async delete(id: string) {
     const album = await this.albumRepo.findOneBy({ id });
+    const silent = true;
     if (!album) throw new NotFoundException('Album not found');
     await this.tracksService.removeAlbumReference(id);
-    await this.favoritesService.removeAlbumIfPresent(id);
+    await this.favoritesService.removeAlbum(id, silent);
     return this.albumRepo.remove(album);
   }
 

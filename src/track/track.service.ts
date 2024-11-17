@@ -47,8 +47,9 @@ export class TrackService {
 
   async delete(id: string): Promise<void> {
     const track = await this.findById(id);
+    const silent = true;
     if (!track) throw new NotFoundException('Track not found');
-    await this.favoritesService.removeTrackIfPresent(id);
+    await this.favoritesService.removeTrack(id, silent);
     this.trackRepo.remove(track);
   }
 
