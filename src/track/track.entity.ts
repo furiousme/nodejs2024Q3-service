@@ -1,5 +1,12 @@
-import { Exclude } from 'class-transformer';
-import { Column, Entity, PrimaryGeneratedColumn } from 'typeorm';
+import { Exclude, Transform } from 'class-transformer';
+import {
+  Column,
+  CreateDateColumn,
+  Entity,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+  VersionColumn,
+} from 'typeorm';
 
 @Entity()
 export class Track {
@@ -9,24 +16,32 @@ export class Track {
   @Column()
   name: string;
 
-  @Column()
+  @Column({ nullable: true })
   artistId: string | null;
 
-  @Column()
+  @Column({ nullable: true })
   albumId: string | null;
 
   @Column()
   duration: number;
 
-  @Column()
+  @VersionColumn()
   @Exclude()
   version: number;
 
-  @Column()
+  @CreateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+  })
+  @Transform(({ value }) => new Date(value).getTime())
   @Exclude()
   createdAt: number;
 
-  @Column()
+  @UpdateDateColumn({
+    type: 'timestamp',
+    default: () => 'CURRENT_TIMESTAMP(6)',
+  })
+  @Transform(({ value }) => new Date(value).getTime())
   @Exclude()
   updatedAt: number;
 

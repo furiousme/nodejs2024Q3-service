@@ -32,7 +32,7 @@ export class AlbumService {
     const album = await this.albumRepo.findOneBy({ id });
     if (!album) throw new NotFoundException('Album not found');
 
-    Object.assign(album, { ...attrs });
+    Object.assign(album, attrs);
     return this.albumRepo.save(album);
   }
 

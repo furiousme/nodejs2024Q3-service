@@ -33,7 +33,7 @@ export class ArtistService {
     const artist = await this.findById(id);
     if (!artist) throw new NotFoundException('Artist not found');
 
-    Object.assign(artist, { ...attrs });
+    Object.assign(artist, attrs);
     return this.artistRepo.save(artist);
   }
 
