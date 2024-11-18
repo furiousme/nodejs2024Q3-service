@@ -13,6 +13,8 @@ services:
       POSTGRES_DB: ${PG_DB}
       POSTGRES_PORT: ${PG_PORT}
       POSTGRES_HOST: ${PG_HOST}
+    networks:
+      - rest_service_network
     ports:
       - "4002:4002"
     volumes:
@@ -30,6 +32,8 @@ services:
       POSTGRES_PASSWORD: ${PG_PASSWORD}
       POSTGRES_DB: ${PG_DB}
       PG_DATA: ${PG_DATA}
+    networks:
+      - rest_service_network
     volumes:
       - pgdata:/var/lib/postgresql/data
     ports:
@@ -37,3 +41,6 @@ services:
     restart: unless-stopped
 volumes:
   pgdata: {}
+networks:
+  rest_service_network:
+    driver: bridge
