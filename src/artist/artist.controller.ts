@@ -135,7 +135,7 @@ export class ArtistController {
   async deleteArtist(
     @Param('id', new ParseUUIDPipe()) id: string,
   ): Promise<string> {
-    const deletedArtistId = await this.artistService.delete(id);
-    return deletedArtistId;
+    await this.artistService.delete(id);
+    return id;
   }
 }

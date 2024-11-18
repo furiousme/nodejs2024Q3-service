@@ -26,7 +26,7 @@ npm start
 Server runs on PORT defined in `.env` file. 
 
 After starting the app on port (4000 as default) you can open
-in your browser OpenAPI documentation by typing http://localhost:4000/doc/.
+in your browser OpenAPI documentation by typing http://localhost:4000/api/.
 For more information about OpenAPI/Swagger please visit https://swagger.io/.
 
 ## API Endpoints
@@ -75,9 +75,37 @@ For more information about OpenAPI/Swagger please visit https://swagger.io/.
 
 ## Database
 
-Currently, the app uses a simple in-memory storage. Future updates will include database integration.
+This project uses a **PostgreSQL** database as its primary datastore. The database is managed within a Docker container and is connected to the application using **TypeORM** for seamless object-relational mapping.
 
+### Database Configuration
+The database connection settings are defined in the `docker-compose.yml` file and the application's `.env` file.
+Make sure to add all necessary values to the `.env` file before launching the app.
 
+**Sample Environment Variables**:
+```env
+PG_CONTAINER_NAME=rest_service_postgres_db
+PG_USER=mypguser
+PG_PASSWORD=mypgpassword
+PG_DB=mypgdb
+PG_HOST=db
+PG_PORT=5432
+```
+
+## Steps to Start the Containers
+
+###
+
+- Build and start the containers:
+
+``` docker compose up --build```
+
+- Verify that the containers are running:
+
+```docker ps```
+
+- To stop the containers, run:
+
+```docker compose down```
 
 ## Testing
 

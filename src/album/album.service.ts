@@ -1,52 +1,57 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { Album } from './album.entity';
-import { AlbumRepository } from './album.repository';
 import { TrackService } from 'src/track/track.service';
 import { FavoritesService } from 'src/favorites/favorites.service';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
 
 @Injectable()
 export class AlbumService {
   constructor(
-    private readonly albumRepo: AlbumRepository,
+    @InjectRepository(Album)
+    private readonly albumRepo: Repository<Album>,
     private readonly tracksService: TrackService,
     private readonly favoritesService: FavoritesService,
   ) {}
 
   create(name: string, year: number, artistId?: string) {
-    return this.albumRepo.create(name, year, artistId);
+    const album = this.albumRepo.create({ name, year, artistId });
+    return this.albumRepo.save(album);
   }
 
   findAll() {
-    return this.albumRepo.findAll();
+    return this.albumRepo.find();
   }
 
   findById(id: string) {
-    return this.albumRepo.findById(id);
+    return this.albumRepo.findOneBy({ id });
   }
 
-  async update(id: string, updatedAlbum: Partial<Album>) {
-    const album = await this.albumRepo.findById(id);
+  async update(id: string, attrs: Partial<Album>) {
+    const album = await this.albumRepo.findOneBy({ id });
     if (!album) throw new NotFoundException('Album not found');
 
-    const now = new Date().getTime();
-    const newAlbum = new Album({
-      ...album,
-      ...updatedAlbum,
-      updatedAt: now,
-      version: album.version + 1,
-    });
-    return this.albumRepo.update(id, newAlbum);
+    Object.assign(album, attrs);
+    return this.albumRepo.save(album);
   }
 
   async delete(id: string) {
-    const album = await this.albumRepo.findById(id);
+    const album = await this.albumRepo.findOneBy({ id });
+    const silent = true;
     if (!album) throw new NotFoundException('Album not found');
     await this.tracksService.removeAlbumReference(id);
-    await this.favoritesService.removeAlbumIfPresent(id);
-    return this.albumRepo.delete(id);
+    await this.favoritesService.removeAlbum(id, silent);
+    return this.albumRepo.remove(album);
   }
 
   async removeArtistReference(artistId: string) {
-    return this.albumRepo.removeArtistReference(artistId);
+    const albums = await this.albumRepo.findBy({ artistId });
+    if (albums.length === 0) return;
+    const updatedAlbums = albums.map((album) => {
+      album.artistId = null;
+      return album;
+    });
+
+    await this.albumRepo.save(updatedAlbums);
   }
 }

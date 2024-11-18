@@ -58,7 +58,7 @@ export class AlbumController {
 
   /**
    *
-   * get list of albums
+   * Get list of albums
    */
   @ApiOkResponse({
     type: [Album],
@@ -140,7 +140,7 @@ export class AlbumController {
   async deleteAlbum(
     @Param('id', new ParseUUIDPipe()) id: string,
   ): Promise<string> {
-    const deletedAlbumId = await this.albumService.delete(id);
-    return deletedAlbumId;
+    await this.albumService.delete(id);
+    return id;
   }
 }
