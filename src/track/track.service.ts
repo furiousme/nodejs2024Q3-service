@@ -55,17 +55,19 @@ export class TrackService {
 
   async removeArtistReference(artistId: string) {
     const tracks = await this.trackRepo.findBy({ artistId });
-    tracks.forEach((track) => {
+    const updatedTracks = tracks.map((track) => {
       track.artistId = null;
-      this.trackRepo.save(track);
+      return track;
     });
+    await this.trackRepo.save(updatedTracks);
   }
 
   async removeAlbumReference(albumId: string) {
     const tracks = await this.trackRepo.findBy({ albumId });
-    tracks.forEach((track) => {
+    const updatedTracks = tracks.map((track) => {
       track.albumId = null;
-      this.trackRepo.save(track);
+      return track;
     });
+    await this.trackRepo.save(updatedTracks);
   }
 }

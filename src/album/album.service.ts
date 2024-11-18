@@ -47,9 +47,11 @@ export class AlbumService {
   async removeArtistReference(artistId: string) {
     const albums = await this.albumRepo.findBy({ artistId });
     if (albums.length === 0) return;
-    albums.forEach(async (album) => {
+    const updatedAlbums = albums.map((album) => {
       album.artistId = null;
-      await this.albumRepo.save(album);
+      return album;
     });
+
+    await this.albumRepo.save(updatedAlbums);
   }
 }

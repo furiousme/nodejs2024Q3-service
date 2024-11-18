@@ -9,6 +9,7 @@ import { Repository } from 'typeorm';
 import { Album } from 'src/album/album.entity';
 import { Track } from 'src/track/track.entity';
 import { ContentType, Favorites } from './favorites.enity';
+import { In } from 'typeorm';
 
 @Injectable()
 export class FavoritesService {
@@ -40,25 +41,23 @@ export class FavoritesService {
       where: { contentType: ContentType.TRACK },
     });
 
-    const [artists, albums, tracks] = await Promise.all([
-      Promise.all([
-        ...artistsIds.map(({ contentId }) =>
-          this.artistRepo.findOneBy({ id: contentId }),
-        ),
-      ]),
-      Promise.all([
-        ...albumsIds.map(({ contentId }) =>
-          this.albumRepo.findOneBy({ id: contentId }),
-        ),
-      ]),
-      Promise.all([
-        ...tracksIds.map(({ contentId }) =>
-          this.trackRepo.findOneBy({ id: contentId }),
-        ),
-      ]),
-    ]);
+    const artistsPromise = this.artistRepo.findBy({
+      id: In(artistsIds.map((el) => el.contentId)),
+    });
 
-    console.log({ artists, albums, tracks });
+    const albumsPromise = this.albumRepo.findBy({
+      id: In(albumsIds.map((el) => el.contentId)),
+    });
+
+    const tracksPromise = this.trackRepo.findBy({
+      id: In(tracksIds.map((el) => el.contentId)),
+    });
+
+    const [artists, albums, tracks] = await Promise.all([
+      artistsPromise,
+      albumsPromise,
+      tracksPromise,
+    ]);
 
     return {
       artists,
