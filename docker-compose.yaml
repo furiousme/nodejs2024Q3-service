@@ -31,16 +31,11 @@ services:
       POSTGRES_USER: ${PG_USER}
       POSTGRES_PASSWORD: ${PG_PASSWORD}
       POSTGRES_DB: ${PG_DB}
-      PG_DATA: ${PG_DATA}
     networks:
       - rest_service_network
-    volumes:
-      - pgdata:/var/lib/postgresql/data
     ports:
       - "5432:5432"
     restart: unless-stopped
-volumes:
-  pgdata: {}
 networks:
   rest_service_network:
     driver: bridge
