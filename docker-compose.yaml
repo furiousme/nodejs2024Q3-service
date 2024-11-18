@@ -4,6 +4,7 @@ services:
       context: .
       dockerfile: Dockerfile
     container_name: rest_service_app
+    restart: unless-stopped
     environment:
       NODE_ENV: development
       PORT: 4002
@@ -31,11 +32,19 @@ services:
       POSTGRES_USER: ${PG_USER}
       POSTGRES_PASSWORD: ${PG_PASSWORD}
       POSTGRES_DB: ${PG_DB}
+      POSTGRES_LOGGING_COLLECTOR: "on"
+      POSTGRES_LOG_MIN_MESSAGES: "info"
     networks:
       - rest_service_network
     ports:
       - "5432:5432"
     restart: unless-stopped
+    volumes:
+      - db-data:/var/lib/postgresql/data 
+      - db-logs:/var/log/postgresql   
 networks:
   rest_service_network:
     driver: bridge
+volumes:
+  db-data:
+  db-logs:
