@@ -3,11 +3,16 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { LoggingService } from './logging/logging.service';
+import { HttpExceptionFilter } from './exception-filters/http-exception.filter';
+import { LoggingMiddleware } from './logging/logging.middleware';
 // import * as fs from 'node:fs';
 // import * as path from 'node:path';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, {
+    bufferLogs: true,
+  });
   const config = app.get(ConfigService);
 
   const docConfig = new DocumentBuilder()
@@ -39,6 +44,9 @@ async function bootstrap() {
       transform: true,
     }),
   );
+
+  // app.useGlobalFilters(new HttpExceptionFilter(app.get(LoggingService)));
+
   await app.listen(config.get('PORT')).then(() => {
     console.log(`Server started on port ${config.get('PORT')}`);
   });

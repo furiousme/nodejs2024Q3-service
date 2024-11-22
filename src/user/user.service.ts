@@ -6,12 +6,14 @@ import {
 import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
+import { LoggingService } from 'src/logging/logging.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepo: Repository<User>,
+    private readonly logger: LoggingService,
   ) {}
 
   create(login: string, password: string) {
@@ -33,9 +35,15 @@ export class UserService {
     newPassword: string,
   ): Promise<User> {
     const user = await this.findById(id);
-    if (!user) throw new NotFoundException('User not found');
-    if (user.password !== oldPassword)
+    if (!user) {
+      this.logger.error(`User not found: ${id}`);
+      throw new NotFoundException('User not found');
+    }
+
+    if (user.password !== oldPassword) {
+      this.logger.error(`Old password is incorrect for user: ${id}`);
       throw new ForbiddenException('Old password is incorrect');
+    }
 
     Object.assign(user, { password: newPassword });
     await this.userRepo.save(user);
@@ -44,7 +52,10 @@ export class UserService {
 
   async delete(id: string): Promise<void> {
     const user = await this.findById(id);
-    if (!user) throw new NotFoundException('User not found');
+    if (!user) {
+      this.logger.error(`User not found: ${id}`);
+      throw new NotFoundException('User not found');
+    }
     this.userRepo.remove(user);
   }
 }
