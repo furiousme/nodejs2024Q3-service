@@ -1,5 +1,7 @@
 import {
   ForbiddenException,
+  forwardRef,
+  Inject,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -7,16 +9,19 @@ import { User } from './user.entity';
 import { Repository } from 'typeorm';
 import { InjectRepository } from '@nestjs/typeorm';
 import { LoggingService } from 'src/logging/logging.service';
+import { AuthService } from 'src/auth/auth.service';
 
 @Injectable()
 export class UserService {
   constructor(
     @InjectRepository(User)
     private readonly userRepo: Repository<User>,
+    @Inject(forwardRef(() => AuthService))
+    private readonly authService: AuthService,
     private readonly logger: LoggingService,
   ) {}
 
-  create(login: string, password: string) {
+  async create(login: string, password: string) {
     const user = this.userRepo.create({ login, password });
     return this.userRepo.save(user);
   }
@@ -27,6 +32,10 @@ export class UserService {
 
   findById(id: string): Promise<User | null> {
     return this.userRepo.findOneBy({ id });
+  }
+
+  findByLogin(login: string): Promise<User | null> {
+    return this.userRepo.findOneBy({ login });
   }
 
   async updateUserPassword(
@@ -40,12 +49,16 @@ export class UserService {
       throw new NotFoundException('User not found');
     }
 
-    if (user.password !== oldPassword) {
+    const oldHashedPassword = this.authService.getHashedPassword(oldPassword);
+
+    if (user.password !== oldHashedPassword) {
       this.logger.error(`Old password is incorrect for user: ${id}`);
       throw new ForbiddenException('Old password is incorrect');
     }
 
-    Object.assign(user, { password: newPassword });
+    const newHashedPassword = this.authService.getHashedPassword(newPassword);
+
+    Object.assign(user, { password: newHashedPassword });
     await this.userRepo.save(user);
     return this.findById(id);
   }

@@ -14,6 +14,7 @@ services:
       POSTGRES_DB: ${PG_DB}
       POSTGRES_PORT: ${PG_PORT}
       POSTGRES_HOST: ${PG_HOST}
+      CRYPT_SALT: ${CRYPT_SALT}
     networks:
       - rest_service_network
     ports:

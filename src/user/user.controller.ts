@@ -13,18 +13,15 @@ import {
   HttpStatus,
   ParseUUIDPipe,
 } from '@nestjs/common';
-import { CreateUserDto } from './dtos/create-user.dto';
 import { UserService } from './user.service';
 import { User } from './user.entity';
 import { UpdatePasswordDto } from './dtos/update-password.dto';
 import {
   ApiBadRequestResponse,
   ApiBody,
-  ApiCreatedResponse,
   ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
-  ApiTags,
 } from '@nestjs/swagger';
 import {
   invalidIdResponseExample,
@@ -33,27 +30,10 @@ import {
   userUpdatedResponseExample,
 } from '../response-examples';
 
-@ApiTags('User')
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('user')
 export class UserController {
   constructor(private readonly userService: UserService) {}
-
-  /**
-   *
-   * Create user
-   */
-  @ApiCreatedResponse({
-    type: User,
-    description: 'The user has been created',
-    example: userResponseExample,
-  })
-  @ApiBody({ type: CreateUserDto })
-  @Post()
-  async createUser(@Body() body: CreateUserDto): Promise<User> {
-    const user = await this.userService.create(body.login, body.password);
-    return user;
-  }
 
   /**
    *
