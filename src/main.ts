@@ -47,8 +47,8 @@ async function bootstrap() {
 
   // app.useGlobalFilters(new HttpExceptionFilter(app.get(LoggingService)));
 
-  await app.listen(config.get('PORT')).then(() => {
-    console.log(`Server started on port ${config.get('PORT')}`);
+  await app.listen(config.get('port')).then(() => {
+    console.log(`Server started on port ${config.get('port')}`);
   });
 }
 bootstrap();
