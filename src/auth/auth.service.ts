@@ -29,15 +29,7 @@ export class AuthService {
   }
 
   async login(login: string, password: string) {
-    const user = await this.userService.findByLogin(login);
-    const hashedPassword = this.getHashedPassword(password);
-    if (!user) {
-      throw new UnauthorizedException('User not found');
-    }
-    if (user.password !== hashedPassword) {
-      throw new UnauthorizedException('Invalid credentials');
-    }
-
+    const user = await this.validateAndGetUser(login, password);
     const tokens = await this.generateTokensPair(user);
     return tokens;
   }
@@ -53,8 +45,7 @@ export class AuthService {
 
   getHashedPassword(password: string): string {
     const salt = this.configService.get('crypt.salt');
-    const res = scryptSync(password, salt, 32).toString('hex');
-    return res;
+    return scryptSync(password, salt, 32).toString('hex'); // todo: handle asynchronously
   }
 
   async generateTokensPair(user: User) {
@@ -64,10 +55,15 @@ export class AuthService {
       payload,
       this.refreshTokenConfig,
     );
+    return { accessToken, refreshToken };
+  }
 
-    return {
-      accessToken,
-      refreshToken,
-    };
+  async validateAndGetUser(login: string, password: string) {
+    const user = await this.userService.findByLogin(login);
+    if (!user) throw new UnauthorizedException('User not found');
+    const hashedPassword = this.getHashedPassword(password);
+    if (user.password !== hashedPassword)
+      throw new UnauthorizedException('Invalid credentials');
+    return user;
   }
 }

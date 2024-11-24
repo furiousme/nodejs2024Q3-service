@@ -3,7 +3,9 @@ import {
   ClassSerializerInterceptor,
   Controller,
   Post,
+  UseGuards,
   UseInterceptors,
+  Request,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { User } from 'src/user/user.entity';
@@ -23,7 +25,7 @@ import {
 import { CreateUserDto } from 'src/auth/dtos/create-user.dto';
 import { LoginDto } from './dtos/login.dto';
 import { RefreshTokenDto } from './dtos/refresh-token.dto';
-
+import { LocalAuthGuard } from './guards/local-auth.guard';
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('auth')
 export class AuthController {
@@ -50,6 +52,7 @@ export class AuthController {
    *
    * Log user in, return tokens
    */
+  @UseGuards(LocalAuthGuard)
   @Post('login')
   @ApiOkResponse({
     description: 'Get auth tokens',
@@ -60,12 +63,13 @@ export class AuthController {
     example: invalidCredentialsResponse,
   })
   @ApiBody({ type: LoginDto })
-  @Post()
   async login(
-    @Body() body: LoginDto,
+    @Request() req,
   ): Promise<{ accessToken: string; refreshToken: string }> {
-    const tokens = await this.authService.login(body.login, body.password);
-    return tokens;
+    const user = req.user;
+    return user;
+    // const tokens = await this.authService.login(body.login, body.password);
+    // return tokens;
   }
 
   /**
