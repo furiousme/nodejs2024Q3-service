@@ -2,7 +2,6 @@ import {
   Controller,
   Get,
   Param,
-  Post,
   Body,
   Put,
   Delete,
@@ -13,6 +12,7 @@ import {
   HttpStatus,
   ParseUUIDPipe,
   UseGuards,
+  Post,
 } from '@nestjs/common';
 import { UserService } from './user.service';
 import { User } from './user.entity';
@@ -20,6 +20,7 @@ import { UpdatePasswordDto } from './dtos/update-password.dto';
 import {
   ApiBadRequestResponse,
   ApiBody,
+  ApiCreatedResponse,
   ApiNoContentResponse,
   ApiNotFoundResponse,
   ApiOkResponse,
@@ -31,12 +32,34 @@ import {
   userUpdatedResponseExample,
 } from '../response-examples';
 import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
+import { CreateUserDto } from 'src/auth/dtos/create-user.dto';
+import { AuthService } from 'src/auth/auth.service';
 
 @UseGuards(JwtAuthGuard)
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('user')
 export class UserController {
-  constructor(private readonly userService: UserService) {}
+  constructor(
+    private readonly userService: UserService,
+    private readonly authService: AuthService,
+  ) {}
+
+  /**
+   *
+   * Create user
+   */
+  @Post()
+  @ApiCreatedResponse({
+    type: User,
+    description: 'The user has been created',
+    example: userResponseExample,
+  })
+  @ApiBody({ type: CreateUserDto })
+  @Post()
+  async createUser(@Body() body: CreateUserDto): Promise<User> {
+    const user = await this.authService.create(body.login, body.password);
+    return user;
+  }
 
   /**
    *
