@@ -1,6 +1,4 @@
 import {
-  BadRequestException,
-  ForbiddenException,
   forwardRef,
   Inject,
   Injectable,
@@ -8,13 +6,20 @@ import {
 } from '@nestjs/common';
 import { UserService } from '../user/user.service';
 import { scryptSync } from 'crypto';
-import 'dotenv/config';
+import { JwtService } from '@nestjs/jwt';
+import { User } from 'src/user/user.entity';
+import jwtRefreshConfig from 'src/config/jwt-refresh.config';
+import { ConfigService, ConfigType } from '@nestjs/config';
 
 @Injectable()
 export class AuthService {
   constructor(
     @Inject(forwardRef(() => UserService))
     private readonly userService: UserService,
+    private readonly jwtService: JwtService,
+    private readonly configService: ConfigService,
+    @Inject(jwtRefreshConfig.KEY)
+    private readonly refreshTokenConfig: ConfigType<typeof jwtRefreshConfig>,
   ) {}
 
   async create(login: string, password: string) {
@@ -32,12 +37,9 @@ export class AuthService {
     if (user.password !== hashedPassword) {
       throw new UnauthorizedException('Invalid credentials');
     }
-    const accessToken = 'This is access token';
-    const refreshToken = 'This is refresh token';
-    return {
-      accessToken,
-      refreshToken,
-    };
+
+    const tokens = await this.generateTokensPair(user);
+    return tokens;
   }
 
   async refreshToken(refreshToken: string) {
@@ -50,8 +52,22 @@ export class AuthService {
   }
 
   getHashedPassword(password: string): string {
-    const salt = process.env.CRYPT_SALT; // todo: replace with config
+    const salt = this.configService.get('crypt.salt');
     const res = scryptSync(password, salt, 32).toString('hex');
     return res;
+  }
+
+  async generateTokensPair(user: User) {
+    const payload = { sub: user.id, login: user.login };
+    const accessToken = await this.jwtService.signAsync(payload);
+    const refreshToken = await this.jwtService.signAsync(
+      payload,
+      this.refreshTokenConfig,
+    );
+
+    return {
+      accessToken,
+      refreshToken,
+    };
   }
 }

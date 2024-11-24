@@ -20,7 +20,6 @@ import configuration from './config/configuration';
       imports: [ConfigModule],
       inject: [ConfigService],
       useFactory: async (configService: ConfigService) => ({
-        inject: [ConfigService],
         type: 'postgres',
         host: configService.get('database.host'),
         port: configService.get('database.port'),

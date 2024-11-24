@@ -1,15 +1,11 @@
 export default () => ({
   port: parseInt(process.env.PORT, 10) || 4002,
   database: {
-    host: process.env.POSTGRES_HOST,
-    port: parseInt(process.env.DATABASE_PORT, 10) || 5432,
-    user: process.env.POSTGRES_USER,
-    password: process.env.POSTGRES_PASSWORD,
-    db: process.env.POSTGRES_DB,
-  },
-  jwt: {
-    secret: process.env.JWT_SECRET,
-    expiresIn: process.env.JWT_EXPIRES_IN,
+    host: process.env.PG_HOST,
+    port: parseInt(process.env.PG_PORT, 10) || 5432,
+    user: process.env.PG_USER,
+    password: process.env.PG_PASSWORD,
+    db: process.env.PG_DB,
   },
   crypt: {
     salt: process.env.CRYPT_SALT,
