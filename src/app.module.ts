@@ -11,24 +11,16 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { LoggingMiddleware } from './logging/logging.middleware';
 import { LoggingModule } from './logging/logging.module';
 import { AuthModule } from './auth/auth.module';
-import configuration from './config/configuration';
+import commonConfig from './config/common.config';
+import dbConfig from './config/db-dev.config';
 
 @Module({
   imports: [
-    ConfigModule.forRoot({ isGlobal: true, load: [configuration] }),
+    ConfigModule.forRoot({ isGlobal: true, load: [commonConfig, dbConfig] }),
     TypeOrmModule.forRootAsync({
       imports: [ConfigModule],
       inject: [ConfigService],
-      useFactory: async (configService: ConfigService) => ({
-        type: 'postgres',
-        host: configService.get('database.host'),
-        port: configService.get('database.port'),
-        username: configService.get('database.user'),
-        password: configService.get('database.password'),
-        database: configService.get('database.db'),
-        autoLoadEntities: true,
-        synchronize: true,
-      }),
+      useFactory: dbConfig,
     }),
     UserModule,
     ArtistModule,
