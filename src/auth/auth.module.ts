@@ -3,10 +3,12 @@ import { AuthService } from './auth.service';
 import { UserModule } from 'src/user/user.module';
 import { AuthController } from './auth.controller';
 import { JwtModule } from '@nestjs/jwt';
-import { ConfigModule, ConfigService } from '@nestjs/config';
+import { ConfigModule } from '@nestjs/config';
 import jwtConfig from 'src/config/jwt.config';
 import jwtRefreshConfig from 'src/config/jwt-refresh.config';
 import { LocalStrategy } from './strategies/local.strategy';
+import { JwtStrategy } from './strategies/jwt.strategy';
+import { RefreshStrategy } from './strategies/refresh.strategy';
 
 @Module({
   controllers: [AuthController],
@@ -17,6 +19,6 @@ import { LocalStrategy } from './strategies/local.strategy';
     JwtModule.registerAsync(jwtConfig.asProvider()),
   ],
   exports: [AuthService],
-  providers: [AuthService, LocalStrategy],
+  providers: [AuthService, LocalStrategy, JwtStrategy, RefreshStrategy],
 })
 export class AuthModule {}

@@ -26,6 +26,7 @@ import { CreateUserDto } from 'src/auth/dtos/create-user.dto';
 import { LoginDto } from './dtos/login.dto';
 import { RefreshTokenDto } from './dtos/refresh-token.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
+import { RefreshAuthGuard } from './guards/refresh-auth.guard';
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('auth')
 export class AuthController {
@@ -66,16 +67,15 @@ export class AuthController {
   async login(
     @Request() req,
   ): Promise<{ accessToken: string; refreshToken: string }> {
-    const user = req.user;
-    return user;
-    // const tokens = await this.authService.login(body.login, body.password);
-    // return tokens;
+    const tokens = await this.authService.login(req.user);
+    return tokens;
   }
 
   /**
    *
    * Refresh tokens
    */
+  @UseGuards(RefreshAuthGuard)
   @Post('refresh')
   @ApiOkResponse({
     description: 'Get new tokens',
@@ -87,10 +87,10 @@ export class AuthController {
   })
   @ApiBody({ type: RefreshTokenDto })
   @Post()
-  async refreshAccessToken(
-    @Body() body: RefreshTokenDto,
+  async refreshToken(
+    @Request() req,
   ): Promise<{ accessToken: string; refreshToken: string }> {
-    const tokens = await this.authService.refreshToken(body.refreshToken);
+    const tokens = await this.authService.refreshToken(req.user);
     return tokens;
   }
 }

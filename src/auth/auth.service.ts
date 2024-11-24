@@ -24,23 +24,15 @@ export class AuthService {
 
   async create(login: string, password: string) {
     const hashedPassword = this.getHashedPassword(password);
-    const user = await this.userService.create(login, hashedPassword);
-    return user;
+    return await this.userService.create(login, hashedPassword);
   }
 
-  async login(login: string, password: string) {
-    const user = await this.validateAndGetUser(login, password);
-    const tokens = await this.generateTokensPair(user);
-    return tokens;
+  async login(user: User) {
+    return await this.generateTokensPair(user);
   }
 
-  async refreshToken(refreshToken: string) {
-    const accessToken = 'This is access token';
-    const newRefreshToken = 'This is a new refresh token';
-    return {
-      accessToken,
-      refreshToken: newRefreshToken,
-    };
+  async refreshToken(user: User) {
+    return this.generateTokensPair(user);
   }
 
   getHashedPassword(password: string): string {

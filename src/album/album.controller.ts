@@ -11,6 +11,7 @@ import {
   ParseUUIDPipe,
   Post,
   Put,
+  UseGuards,
   UseInterceptors,
 } from '@nestjs/common';
 import { AlbumService } from './album.service';
@@ -30,7 +31,9 @@ import {
   albumResponseExample,
   invalidIdResponseExample,
 } from 'src/response-examples';
+import { JwtAuthGuard } from 'src/auth/guards/jwt-auth.guard';
 
+@UseGuards(JwtAuthGuard)
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('album')
 export class AlbumController {
