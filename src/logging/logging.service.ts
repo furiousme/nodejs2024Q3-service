@@ -1,4 +1,6 @@
 import { Injectable, Logger, Scope } from '@nestjs/common';
+import * as fs from 'node:fs';
+import * as path from 'node:path';
 
 @Injectable({ scope: Scope.TRANSIENT })
 export class LoggingService {
@@ -6,21 +8,51 @@ export class LoggingService {
     timestamp: true,
   });
 
-  log(message: string, context?: string) {
-    this.logger.log(message, context ?? '');
+  private readonly stream: fs.WriteStream;
+  private readonly folderPath: string = path.join(
+    __dirname, // src/logging
+    '..',
+    '..',
+    'logs',
+  );
+
+  constructor() {
+    fs.mkdirSync(path.dirname(this.folderPath), { recursive: true });
+    this.stream = fs.createWriteStream(path.join(this.folderPath, 'logs.txt'), {
+      flags: 'a+',
+    });
   }
 
-  error(message: string, stackTrace?: string, context?: string) {
-    this.logger.error(message, stackTrace, context);
+  log(message, ...args) {
+    this.logger.log(message, ...args);
+    this.write('LOG', message, ...args);
   }
 
-  warn(message: string, context?: string) {
-    this.logger.warn(message, context);
+  error(message: string, ...args) {
+    this.logger.error(message, ...args);
+    this.write('ERROR', message, ...args);
   }
 
-  debug(message: string, context?: string) {
-    if (process.env.LOG_LEVEL === 'debug') {
-      this.logger.debug(message, context);
+  warn(message: string, ...args) {
+    this.logger.warn(message, ...args);
+    this.write('ERROR', message, ...args);
+  }
+
+  debug(message: string, ...args) {
+    this.logger.debug(message, ...args);
+    this.debug('DEBUG', message, ...args);
+  }
+
+  write(level: string, message: string, ...args) {
+    try {
+      const now = new Date().toISOString();
+      const logString = `${now} [${level}] ${message} ${
+        args.length ? JSON.stringify(args) : ''
+      }`;
+      this.stream.write('\n');
+      this.stream.write(logString);
+    } catch (e) {
+      this.error('Failed to write into log file', e);
     }
   }
 }
