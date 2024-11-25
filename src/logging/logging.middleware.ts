@@ -14,7 +14,7 @@ export class LoggingMiddleware implements NestMiddleware {
       const status = res.statusCode;
       const duration = Date.now() - startTime;
       const logString = buildLogString({ req, status, duration });
-      this.logger.log(logString);
+      this.logger.log(logString, 'Middleware');
     });
 
     next();

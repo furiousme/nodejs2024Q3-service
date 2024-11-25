@@ -2,12 +2,12 @@ import { Injectable, Logger, Scope } from '@nestjs/common';
 
 @Injectable({ scope: Scope.TRANSIENT })
 export class LoggingService {
-  private readonly logger = new Logger(LoggingService.name, {
+  private readonly logger = new Logger('', {
     timestamp: true,
   });
 
   log(message: string, context?: string) {
-    this.logger.log(context ? [...message, context] : message);
+    this.logger.log(message, context ?? '');
   }
 
   error(message: string, stackTrace?: string, context?: string) {

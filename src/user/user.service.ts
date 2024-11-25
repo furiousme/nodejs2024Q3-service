@@ -45,14 +45,17 @@ export class UserService {
   ): Promise<User> {
     const user = await this.findById(id);
     if (!user) {
-      this.logger.error(`User not found: ${id}`);
+      this.logger.error(`User not found: ${id}`, 'UserService');
       throw new NotFoundException('User not found');
     }
 
     const oldHashedPassword = this.authService.getHashedPassword(oldPassword);
 
     if (user.password !== oldHashedPassword) {
-      this.logger.error(`Old password is incorrect for user: ${id}`);
+      this.logger.error(
+        `Old password is incorrect for user: ${id}`,
+        'UserService',
+      );
       throw new ForbiddenException('Old password is incorrect');
     }
 
@@ -60,13 +63,14 @@ export class UserService {
 
     Object.assign(user, { password: newHashedPassword });
     await this.userRepo.save(user);
+    this.logger.log(`Password updated for user: ${id}`, 'UserService');
     return this.findById(id);
   }
 
   async delete(id: string): Promise<void> {
     const user = await this.findById(id);
     if (!user) {
-      this.logger.error(`User not found: ${id}`);
+      this.logger.error(`User not found: ${id}`, 'UserService');
       throw new NotFoundException('User not found');
     }
     this.userRepo.remove(user);
