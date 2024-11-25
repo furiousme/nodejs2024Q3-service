@@ -8,7 +8,6 @@ export class LoggingService {
     timestamp: true,
   });
 
-  private readonly stream: fs.WriteStream;
   private readonly folderPath: string = path.join(
     __dirname, // src/logging
     '..',
@@ -16,11 +15,20 @@ export class LoggingService {
     'logs',
   );
 
+  private readonly stream: fs.WriteStream;
+  private readonly errorStream: fs.WriteStream;
+
   constructor() {
     fs.mkdirSync(path.dirname(this.folderPath), { recursive: true });
     this.stream = fs.createWriteStream(path.join(this.folderPath, 'logs.txt'), {
       flags: 'a+',
     });
+    this.errorStream = fs.createWriteStream(
+      path.join(this.folderPath, 'logs-errors.txt'),
+      {
+        flags: 'a+',
+      },
+    );
   }
 
   log(message, ...args) {
@@ -51,6 +59,10 @@ export class LoggingService {
       }`;
       this.stream.write('\n');
       this.stream.write(logString);
+      if (level === 'ERROR') {
+        this.errorStream.write('\n');
+        this.errorStream.write(logString);
+      }
     } catch (e) {
       this.error('Failed to write into log file', e);
     }
