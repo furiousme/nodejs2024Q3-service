@@ -4,6 +4,7 @@ import { TrackService } from 'src/track/track.service';
 import { FavoritesService } from 'src/favorites/favorites.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { LoggingService } from 'src/logging/logging.service';
 
 @Injectable()
 export class AlbumService {
@@ -12,6 +13,7 @@ export class AlbumService {
     private readonly albumRepo: Repository<Album>,
     private readonly tracksService: TrackService,
     private readonly favoritesService: FavoritesService,
+    private readonly logger: LoggingService,
   ) {}
 
   create(name: string, year: number, artistId?: string) {
@@ -29,7 +31,10 @@ export class AlbumService {
 
   async update(id: string, attrs: Partial<Album>) {
     const album = await this.albumRepo.findOneBy({ id });
-    if (!album) throw new NotFoundException('Album not found');
+    if (!album) {
+      this.logger.error(`Album ${id} not found`, 'AlbumService');
+      throw new NotFoundException('Album not found');
+    }
 
     Object.assign(album, attrs);
     return this.albumRepo.save(album);
@@ -38,7 +43,10 @@ export class AlbumService {
   async delete(id: string) {
     const album = await this.albumRepo.findOneBy({ id });
     const silent = true;
-    if (!album) throw new NotFoundException('Album not found');
+    if (!album) {
+      this.logger.error(`Album ${id} not found`, 'AlbumService');
+      throw new NotFoundException('Album not found');
+    }
     await this.tracksService.removeAlbumReference(id);
     await this.favoritesService.removeAlbum(id, silent);
     return this.albumRepo.remove(album);
