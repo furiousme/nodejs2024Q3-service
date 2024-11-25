@@ -3,7 +3,6 @@ import { AppModule } from './app.module';
 import { ValidationPipe } from '@nestjs/common';
 import { ConfigService } from '@nestjs/config';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
-import { LoggingService } from './logging/logging.service';
 import { HttpExceptionFilter } from './exception-filters/http-exception.filter';
 import { LoggingMiddleware } from './logging/logging.middleware';
 // import * as fs from 'node:fs';
