@@ -5,15 +5,7 @@ services:
       dockerfile: Dockerfile
     container_name: rest_service_app
     restart: unless-stopped
-    environment:
-      NODE_ENV: development
-      PORT: 4002
-      DB_TYPE: postgres
-      POSTGRES_USER: ${PG_USER}
-      POSTGRES_PASSWORD: ${PG_PASSWORD}
-      POSTGRES_DB: ${PG_DB}
-      POSTGRES_PORT: ${PG_PORT}
-      POSTGRES_HOST: ${PG_HOST}
+    env_file: ".env"
     networks:
       - rest_service_network
     ports:
@@ -28,12 +20,7 @@ services:
       dockerfile: Dockerfile.db
     image: "postgres"
     container_name: ${PG_CONTAINER_NAME}
-    environment:
-      POSTGRES_USER: ${PG_USER}
-      POSTGRES_PASSWORD: ${PG_PASSWORD}
-      POSTGRES_DB: ${PG_DB}
-      POSTGRES_LOGGING_COLLECTOR: "on"
-      POSTGRES_LOG_MIN_MESSAGES: "info"
+    env_file: ".env"
     networks:
       - rest_service_network
     ports:

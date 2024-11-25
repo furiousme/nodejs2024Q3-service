@@ -90,3 +90,20 @@ export const favoritesNotFoundResponseExample = {
   message: 'Artist not found in favorites',
   error: 'Unprocessable Entity',
 };
+
+export const tokensResponseExample = {
+  accessToken: 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+  refreshToken: 'XXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXXX',
+};
+
+export const invalidCredentialsResponse = {
+  statusCode: 403,
+  message: 'Invalid credentials',
+  error: 'Forbidden',
+};
+
+export const invalidRefreshTokenResponse = {
+  statusCode: 403,
+  message: 'Invalid or expired refresh token',
+  error: 'Forbidden',
+};

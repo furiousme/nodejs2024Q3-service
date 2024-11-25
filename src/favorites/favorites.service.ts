@@ -10,6 +10,7 @@ import { Album } from 'src/album/album.entity';
 import { Track } from 'src/track/track.entity';
 import { ContentType, Favorites } from './favorites.enity';
 import { In } from 'typeorm';
+import { LoggingService } from 'src/logging/logging.service';
 
 @Injectable()
 export class FavoritesService {
@@ -25,9 +26,12 @@ export class FavoritesService {
 
     @InjectRepository(Track)
     private readonly trackRepo: Repository<Track>,
+
+    private readonly logger: LoggingService,
   ) {}
 
   async getAll() {
+    // todo: refactor to make parallel requests
     const artistsIds = await this.favoritesRepo.find({
       select: ['contentId'],
       where: { contentType: ContentType.ARTIST },
@@ -68,34 +72,49 @@ export class FavoritesService {
 
   async addArtist(artistId: string) {
     const artist = await this.artistRepo.findOneBy({ id: artistId });
-    if (!artist) throw new UnprocessableEntityException('Entity not found');
+    if (!artist) {
+      this.logger.error(`Artist ${artistId} not found`, 'FavoritesService');
+      throw new UnprocessableEntityException('Entity not found');
+    }
     const record = this.favoritesRepo.create({
       contentType: ContentType.ARTIST,
       contentId: artistId,
     });
     await this.favoritesRepo.save(record);
+    this.logger.log(
+      `Artist ${artistId} added to favorites`,
+      'FavoritesService',
+    );
     return record.id;
   }
 
   async addAlbum(albumId: string) {
     const album = await this.albumRepo.findOneBy({ id: albumId });
-    if (!album) throw new UnprocessableEntityException('Entity not found');
+    if (!album) {
+      this.logger.error(`Album ${albumId} not found`, 'FavoritesService');
+      throw new UnprocessableEntityException('Entity not found');
+    }
     const record = this.favoritesRepo.create({
       contentType: ContentType.ALBUM,
       contentId: albumId,
     });
     await this.favoritesRepo.save(record);
+    this.logger.log(`Album ${albumId} added to favorites`, 'FavoritesService');
     return record.id;
   }
 
   async addTrack(trackId: string) {
     const track = await this.trackRepo.findOneBy({ id: trackId });
-    if (!track) throw new UnprocessableEntityException('Entity not found');
+    if (!track) {
+      this.logger.error(`Track ${trackId} not found`, 'FavoritesService');
+      throw new UnprocessableEntityException('Entity not found');
+    }
     const record = this.favoritesRepo.create({
       contentType: ContentType.TRACK,
       contentId: trackId,
     });
     await this.favoritesRepo.save(record);
+    this.logger.log(`Track ${trackId} added to favorites`, 'FavoritesService');
     return record.id;
   }
 
@@ -105,6 +124,10 @@ export class FavoritesService {
     });
     if (!artistRecord) {
       if (silent) return;
+      this.logger.error(
+        `Artist ${artistId} not found in favorites`,
+        'FavoritesService',
+      );
       throw new NotFoundException('Entity not found in favorites');
     }
     return this.favoritesRepo.remove(artistRecord);
@@ -116,6 +139,10 @@ export class FavoritesService {
     });
     if (!albumRecord) {
       if (silent) return;
+      this.logger.error(
+        `Album ${albumId} not found in favorites`,
+        'FavoritesService',
+      );
       throw new NotFoundException('Entity not found in favorites');
     }
     return this.favoritesRepo.remove(albumRecord);
@@ -127,6 +154,10 @@ export class FavoritesService {
     });
     if (!trackRecord) {
       if (silent) return;
+      this.logger.error(
+        `Track ${contentId} not found in favorites`,
+        'FavoritesService',
+      );
       throw new NotFoundException('Entity not found in favorites');
     }
     return this.favoritesRepo.remove(trackRecord);

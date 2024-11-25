@@ -5,6 +5,7 @@ import { UpdateTrackDto } from './dtos/update-track.dto';
 import { FavoritesService } from 'src/favorites/favorites.service';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
+import { LoggingService } from 'src/logging/logging.service';
 
 @Injectable()
 export class TrackService {
@@ -12,14 +13,11 @@ export class TrackService {
     @InjectRepository(Track)
     private readonly trackRepo: Repository<Track>,
     private readonly favoritesService: FavoritesService,
+    private readonly logger: LoggingService,
   ) {}
 
-  create({
-    name,
-    albumId,
-    artistId,
-    duration,
-  }: CreateTrackDto): Promise<Track> {
+  create(trackInputData: CreateTrackDto): Promise<Track> {
+    const { name, artistId, albumId, duration } = trackInputData;
     const track = this.trackRepo.create({
       name,
       artistId: artistId || null,
@@ -40,7 +38,10 @@ export class TrackService {
 
   async update(id: string, attrs: Partial<UpdateTrackDto>): Promise<Track> {
     const track = await this.findById(id);
-    if (!track) throw new NotFoundException('Track not found');
+    if (!track) {
+      this.logger.error(`Track ${id} not found`, 'TrackService');
+      throw new NotFoundException('Track not found');
+    }
     Object.assign(track, attrs);
     return this.trackRepo.save(track);
   }
@@ -48,7 +49,10 @@ export class TrackService {
   async delete(id: string): Promise<void> {
     const track = await this.findById(id);
     const silent = true;
-    if (!track) throw new NotFoundException('Track not found');
+    if (!track) {
+      this.logger.error(`Track ${id} not found`, 'TrackService');
+      throw new NotFoundException('Track not found');
+    }
     await this.favoritesService.removeTrack(id, silent);
     this.trackRepo.remove(track);
   }

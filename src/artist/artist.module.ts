@@ -6,6 +6,7 @@ import { AlbumModule } from 'src/album/album.module';
 import { TrackModule } from 'src/track/track.module';
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Artist } from './artist.entity';
+import { LoggingModule } from 'src/logging/logging.module';
 
 @Module({
   controllers: [ArtistController],
@@ -16,6 +17,7 @@ import { Artist } from './artist.entity';
     forwardRef(() => AlbumModule),
     forwardRef(() => TrackModule),
     TypeOrmModule.forFeature([Artist]),
+    LoggingModule,
   ],
 })
 export class ArtistModule {}
