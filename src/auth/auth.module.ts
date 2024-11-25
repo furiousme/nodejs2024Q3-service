@@ -8,7 +8,6 @@ import jwtConfig from 'src/config/jwt.config';
 import jwtRefreshConfig from 'src/config/jwt-refresh.config';
 import { LocalStrategy } from './strategies/local.strategy';
 import { JwtStrategy } from './strategies/jwt.strategy';
-import { RefreshStrategy } from './strategies/refresh.strategy';
 
 @Module({
   controllers: [AuthController],
@@ -19,6 +18,6 @@ import { RefreshStrategy } from './strategies/refresh.strategy';
     JwtModule.registerAsync(jwtConfig.asProvider()),
   ],
   exports: [AuthService],
-  providers: [AuthService, LocalStrategy, JwtStrategy, RefreshStrategy],
+  providers: [AuthService, LocalStrategy, JwtStrategy],
 })
 export class AuthModule {}

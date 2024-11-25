@@ -1,4 +1,4 @@
 export type AuthJwtPayload = {
-  sub: string;
+  userId: string;
   login: string;
 };

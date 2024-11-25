@@ -6,6 +6,8 @@ import {
   UseGuards,
   UseInterceptors,
   Request,
+  HttpStatus,
+  HttpCode,
 } from '@nestjs/common';
 import { AuthService } from './auth.service';
 import { User } from 'src/user/user.entity';
@@ -27,6 +29,7 @@ import { LoginDto } from './dtos/login.dto';
 import { RefreshTokenDto } from './dtos/refresh-token.dto';
 import { LocalAuthGuard } from './guards/local-auth.guard';
 import { RefreshAuthGuard } from './guards/refresh-auth.guard';
+
 @UseInterceptors(ClassSerializerInterceptor)
 @Controller('auth')
 export class AuthController {
@@ -76,6 +79,7 @@ export class AuthController {
    * Refresh tokens
    */
   @UseGuards(RefreshAuthGuard)
+  @HttpCode(HttpStatus.OK)
   @Post('refresh')
   @ApiOkResponse({
     description: 'Get new tokens',
